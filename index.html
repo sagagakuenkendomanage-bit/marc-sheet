@@ -239,20 +239,9 @@
         <button onclick="toggleCalAdd()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">＋ 予定を追加</button>
       </div>
 
-      <!-- 予定リスト -->
+      <!-- 予定リスト（GASから動的取得） -->
       <div id="cal-events" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="background:var(--primary);color:#fff;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;min-width:44px;text-align:center;">6/9</div>
-          <div style="font-size:13px;color:var(--ink);">定例ミーティング 17:00〜18:00</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="background:var(--primary);color:#fff;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;min-width:44px;text-align:center;">6/12</div>
-          <div style="font-size:13px;color:var(--ink);">部員説明会 17:00〜18:00</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="background:#E6F5F0;color:var(--primary);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;min-width:44px;text-align:center;">6/15</div>
-          <div style="font-size:13px;color:var(--ink-soft);">強化練習 9:00〜12:00</div>
-        </div>
+        <div style="font-size:12px;color:var(--ink-muted);">読み込み中…</div>
       </div>
 
       <!-- カレンダーを開くリンク（小さく） -->
@@ -281,11 +270,11 @@
       <div style="border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:12px 14px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
           <div style="background:var(--primary);color:#fff;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0;">次回</div>
-          <div style="font-size:13px;color:var(--ink);font-weight:600;">6月9日（月）17:00〜18:00</div>
+          <div class="meeting-date-label" style="font-size:13px;color:var(--ink);font-weight:600;">—</div>
         </div>
         <div id="meeting-agenda" style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;">
           <div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">議題</div>
-          <div style="font-size:12px;color:var(--ink);line-height:1.8;">稽古メニューをつくる</div>
+          <div style="font-size:12px;color:var(--ink-muted);line-height:1.8;">読み込み中…</div>
         </div>
       </div>
     </div>
@@ -294,65 +283,6 @@
     <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:16px 20px;margin-bottom:14px;">
       <div style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.04em;margin-bottom:12px;">👥 チーム編成</div>
       <div id="team-list">
-        <div class="team-card" style="border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <div style="font-size:14px;font-weight:700;color:var(--ink);">チームA</div>
-            <div style="display:flex;gap:6px;">
-              <span style="background:#E6F5F0;color:#0F6E56;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">リーダー：田中</span>
-              <span style="background:#EEF2FF;color:#3730A3;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">サブリーダー：佐藤</span>
-            </div>
-          </div>
-          <div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px;">田中・佐藤・山田・鈴木・高橋</div>
-          <div style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:10px;">
-            <div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">稽古テーマ</div>
-            <div style="font-size:12px;color:var(--ink);">面打ちの踏み込みを意識する</div>
-          </div>
-          <div style="border-top:1px solid var(--border-soft);padding-top:10px;">
-            <div style="font-size:10px;font-weight:700;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:8px;">🎯 チャレンジ宣言</div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">田中</span>
-                <span style="font-size:12px;color:var(--ink);line-height:1.5;">踏み込みを50cm以上伸ばす</span>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">佐藤</span>
-                <span style="font-size:12px;color:var(--ink);line-height:1.5;">声を出して気勢を高める</span>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">山田</span>
-                <span style="font-size:12px;color:var(--ink-muted);font-style:italic;">未入力</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="team-card" style="border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <div style="font-size:14px;font-weight:700;color:var(--ink);">チームB</div>
-            <div style="display:flex;gap:6px;">
-              <span style="background:#E6F5F0;color:#0F6E56;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">リーダー：伊藤</span>
-              <span style="background:#EEF2FF;color:#3730A3;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">サブリーダー：渡辺</span>
-            </div>
-          </div>
-          <div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px;">伊藤・渡辺・中村・小林</div>
-          <div style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:10px;">
-            <div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">稽古テーマ</div>
-            <div style="font-size:12px;color:var(--ink-muted);font-style:italic;">自由に稽古テーマを設定してください</div>
-          </div>
-          <div style="border-top:1px solid var(--border-soft);padding-top:10px;">
-            <div style="font-size:10px;font-weight:700;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:8px;">🎯 チャレンジ宣言</div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">伊藤</span>
-                <span style="font-size:12px;color:var(--ink);line-height:1.5;">胴の受けを完璧にする</span>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">渡辺</span>
-                <span style="font-size:12px;color:var(--ink-muted);font-style:italic;">未入力</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -1060,13 +990,55 @@ function switchTab(tab, el) {
 const CAL_ID = 'f73c9138556948d4566156c4b995a372a35d0bb1e51b2f5c6e2b3342a25e0531@group.calendar.google.com';
 
 function loadNews() {
-  loadCalendarEvents();
-  loadTeams();
+  fetch(GAS_URL + '?action=getNews', { method: 'GET' })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(data.status === 'ok'){
+      renderCalendarEvents(data.calendar || []);
+      renderAgenda(data.agenda || null);
+      renderTeams(data.teams || []);
+    }
+  })
+  .catch(function(){ /* ネットワーク失敗時は静的表示のまま */ });
 }
 
-function loadCalendarEvents() {
-  // 予定はHTMLに静的記述。GAS連携後に動的取得予定
+function renderCalendarEvents(events) {
+  const el = document.getElementById('cal-events');
+  if(!el) return;
+  if(!events.length){
+    el.innerHTML = '<div style="font-size:12px;color:var(--ink-muted);padding:4px 0;">今後30日間の予定はありません</div>';
+    return;
+  }
+  el.innerHTML = events.map(function(ev){
+    const isToday = ev.today;
+    const bg  = isToday ? 'var(--primary)' : '#E6F5F0';
+    const col = isToday ? '#fff' : 'var(--primary)';
+    const txtCol = isToday ? 'var(--ink)' : 'var(--ink-soft)';
+    const timeStr = ev.time ? ' ' + ev.time : '';
+    return '<div style="display:flex;align-items:center;gap:10px;">' +
+      '<div style="background:'+bg+';color:'+col+';border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;min-width:44px;text-align:center;">' + escH(ev.date||'') + '</div>' +
+      '<div style="font-size:13px;color:'+txtCol+';">' + escH(ev.title + timeStr) + '</div>' +
+    '</div>';
+  }).join('');
 }
+
+function renderAgenda(agenda) {
+  if(!agenda || !agenda.date) return;
+  const d = new Date(agenda.date + 'T00:00:00');
+  const DOW = ['日','月','火','水','木','金','土'];
+  const dateLabel = (d.getMonth()+1) + '月' + d.getDate() + '日（' + DOW[d.getDay()] + '）';
+  const timeLabel = agenda.start && agenda.end ? ' ' + agenda.start + '〜' + agenda.end : '';
+  const dateEl = document.querySelector('#tab-news .meeting-date-label');
+  if(dateEl) dateEl.textContent = dateLabel + timeLabel;
+  const agendaEl = document.getElementById('meeting-agenda');
+  if(agendaEl){
+    agendaEl.innerHTML =
+      '<div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">議題</div>' +
+      '<div style="font-size:12px;color:var(--ink);line-height:1.8;">' + escH(agenda.text || '—') + '</div>';
+  }
+}
+
+function loadCalendarEvents() { /* renderCalendarEventsに移行 */ }
 
 function openCalendarAdd() {
   toggleCalAdd();
@@ -1094,9 +1066,54 @@ function addToCalendar() {
   showToast('✓ Googleカレンダーで確認してください');
 }
 
-function loadTeams() {
-  // チームデータはGASから取得予定。現在はサンプル表示
+function renderTeams(teams) {
+  const el = document.getElementById('team-list');
+  if(!el) return;
+  if(!teams.length){
+    el.innerHTML = '<div style="font-size:12px;color:var(--ink-muted);text-align:center;padding:16px 0;">チーム編成はまだ設定されていません</div>';
+    return;
+  }
+  el.innerHTML = teams.map(function(t){
+    const members = t.members || [];
+    const leader = t.leader || members[0] || '';
+    const sub    = t.sub    || members[1] || '';
+    const memberStr = members.join('・');
+    const declaresHtml = members.map(function(m){
+      const latestDate = Object.keys(marc.declares||{}).sort().reverse()[0] || '';
+      const decl = latestDate ? (marc.declares[latestDate]||{}) : {};
+      const isMe = (marc.name && m === marc.name);
+      const text = isMe ? (decl.intent || '') : null;
+      return '<div style="display:flex;gap:10px;align-items:flex-start;">' +
+        '<span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">' + escH(m) + '</span>' +
+        (text !== null
+          ? '<span style="font-size:12px;color:var(--ink);line-height:1.5;">' + (text ? escH(text) : '<span style="color:var(--ink-muted);font-style:italic;">未入力</span>') + '</span>'
+          : '<span style="font-size:12px;color:var(--ink-muted);">—</span>') +
+      '</div>';
+    }).join('');
+    return '<div class="team-card" style="border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px;">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
+        '<div style="font-size:14px;font-weight:700;color:var(--ink);">' + escH(t.name) + '</div>' +
+        '<div style="display:flex;gap:6px;">' +
+          (leader ? '<span style="background:#E6F5F0;color:#0F6E56;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">リーダー：' + escH(leader) + '</span>' : '') +
+          (sub    ? '<span style="background:#EEF2FF;color:#3730A3;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">サブリーダー：' + escH(sub) + '</span>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px;">' + escH(memberStr) + '</div>' +
+      '<div style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:10px;">' +
+        '<div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">稽古テーマ</div>' +
+        '<div style="font-size:12px;color:' + (t.theme ? 'var(--ink)' : 'var(--ink-muted)') + ';' + (t.theme ? '' : 'font-style:italic;') + '">' + escH(t.theme || '自由に稽古テーマを設定してください') + '</div>' +
+      '</div>' +
+      '<div style="border-top:1px solid var(--border-soft);padding-top:10px;">' +
+        '<div style="font-size:10px;font-weight:700;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:8px;">🎯 チャレンジ宣言</div>' +
+        '<div style="display:flex;flex-direction:column;gap:6px;">' + declaresHtml + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
+
+function loadTeams() { /* renderTeamsに移行 */ }
+
+function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 document.addEventListener('DOMContentLoaded', () => {
   marc.name=''; marc.grade=''; marc.kumi='';
