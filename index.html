@@ -947,7 +947,7 @@ function generatePrint() { showToast('⏳ GASで一覧表を生成します。')
 function _switchTabLegacy(tab, el) {
     const nameEl=document.getElementById('nameInput');
     if(nameEl&&nameEl.value.trim()){
-      marc.name=nameEl.value.trim(); marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
+      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
       LS.set(LS_NAME,marc.name);
       const logName=document.getElementById('logUserName'); if(logName){logName.textContent=marc.name;logName.style.color='var(--primary)';}
     }
@@ -961,7 +961,8 @@ function onNameInput(el) {
     window._nameTimer=setTimeout(function(){
       marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
       marc._fetchId++; const currentId=marc._fetchId;
-      fetchUserData(v,marc.grade,marc.kumi,currentId);
+      const vNorm = v.replace(/[　\s]+/g,'');
+      fetchUserData(vNorm,marc.grade,marc.kumi,currentId);
     },1000);
   }
 }
