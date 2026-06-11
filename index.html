@@ -538,11 +538,15 @@ barsGroups.forEach(group => {
     starsWrap.querySelectorAll('.bars-star').forEach(star => {
       star.addEventListener('click', () => {
         const val = +star.dataset.v;
-        starsWrap.querySelectorAll('.bars-star').forEach((s, i) => s.classList.toggle('lit', i < val));
-        itemDiv.querySelectorAll('.bars-anchor-row').forEach(row => row.classList.toggle('selected', +row.dataset.level === val));
+        const currentLit = starsWrap.querySelectorAll('.bars-star.lit').length;
+        const newVal = currentLit === val ? 0 : val;
+        starsWrap.querySelectorAll('.bars-star').forEach((s, i) => s.classList.toggle('lit', i < newVal));
+        itemDiv.querySelectorAll('.bars-anchor-row').forEach(row => row.classList.toggle('selected', +row.dataset.level === newVal));
         const labelEl = document.getElementById('bars-label-' + item.key);
         const levelLabels = ['まだこれから', '基礎段階', '標準レベル', '得意分野', '武器・強み'];
-        labelEl.innerHTML = `現在の評価：<span>★${val} — ${levelLabels[val-1]}</span>`;
+        labelEl.innerHTML = newVal === 0
+          ? '← 上の行動説明を読んで、当てはまる★を選んでください'
+          : `現在の評価：<span>★${newVal} — ${levelLabels[newVal-1]}</span>`;
         updateProgress();
       });
       star.addEventListener('mouseenter', () => {
@@ -955,14 +959,14 @@ function _switchTabLegacy(tab, el) {
 }
 
 function onNameInput(el) {
-  const v=el.value.trim(); marc.name=v; LS.set(LS_NAME,v);
-  if(v.length>=2){
-    clearTimeout(window._nameTimer);
+  const v=el.value.trim(); const vNorm=v.replace(/[\u3000\s]+/g,''); marc.name=vNorm; LS.set(LS_NAME,vNorm);
+  marc._fetchId++;
+  clearTimeout(window._nameTimer);
+  if(vNorm.length>=2){
     window._nameTimer=setTimeout(function(){
       marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
-      marc._fetchId++; const currentId=marc._fetchId;
-      const vNorm = v.replace(/[　\s]+/g,'');
-      fetchUserData(vNorm,marc.grade,marc.kumi,currentId);
+      const currentId=marc._fetchId;
+      fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
     },1000);
   }
 }
@@ -1120,7 +1124,7 @@ document.addEventListener('DOMContentLoaded', () => {
   marc.name=''; marc.grade=''; marc.kumi='';
   const storedName=LS.get(LS_NAME)||'';
   if(storedName){
-    marc.name=storedName;
+    marc.name=storedName.replace(/[\u3000\s]+/g,'');
     const ni=document.getElementById('nameInput'); if(ni) ni.value=storedName;
     const lu=document.getElementById('logUserName'); if(lu){lu.textContent=storedName;lu.style.color='var(--primary)';}
     marc._fetchId++; const initId=marc._fetchId;
