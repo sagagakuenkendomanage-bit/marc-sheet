@@ -1001,6 +1001,7 @@ function loadNews() {
     if(data.status === 'ok'){
       renderCalendarEvents(data.calendar || []);
       renderAgenda(data.agenda || null);
+      window._allDeclares = data.declares || {};
       renderTeams(data.teams || []);
     }
   })
@@ -1084,10 +1085,9 @@ function renderTeams(teams) {
     const sub    = t.sub    || members[1] || '';
     const memberStr = members.join('・');
     const declaresHtml = members.map(function(m){
-      const latestDate = Object.keys(marc.declares||{}).sort().reverse()[0] || '';
-      const decl = latestDate ? (marc.declares[latestDate]||{}) : {};
-      const isMe = (marc.name && m === marc.name);
-      const text = isMe ? (decl.intent || '') : null;
+      const mNorm = m.replace(/[　\s]+/g, '');
+      const declData = (window._allDeclares || {})[mNorm] || null;
+      const text = declData ? (declData.intent || '') : null;
       return '<div style="display:flex;gap:10px;align-items:flex-start;">' +
         '<span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">' + escH(m) + '</span>' +
         (text !== null
