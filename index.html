@@ -298,14 +298,14 @@
       </div>
       <div style="width:120px;flex-shrink:0;">
         <label class="field-label" style="margin-bottom:5px;">学年<span class="required">*</span></label>
-        <select id="gakuNenSelect" data-required onchange="updateProgress()" style="margin:0;">
+        <select id="gakuNenSelect" data-required onchange="updateProgress();onGradeKumiChange();" style="margin:0;">
           <option value="">選択</option>
           <option>1年</option><option>2年</option><option>3年</option>
         </select>
       </div>
       <div style="width:100px;flex-shrink:0;">
         <label class="field-label" style="margin-bottom:5px;">組</label>
-        <input type="text" id="kumiInput" placeholder="2組" style="margin:0;">
+        <input type="text" id="kumiInput" placeholder="2組" oninput="onGradeKumiChange();" style="margin:0;">
       </div>
     </div>
 
@@ -792,8 +792,12 @@ function renderLogUI() {
   let d = (dateEl && dateEl.value) ? dateEl.value.slice(0,10) : '';
   if (!d) {
     const pending = Object.keys(marc.declares).filter(x => !marc.logs[x]).sort().reverse();
-    if (pending.length) { d = pending[0]; if (dateEl) dateEl.value = d; }
+    if (pending.length) { d = pending[0]; }
+    else { d = todayJST(); }
+    if (dateEl) dateEl.value = d;
   }
+  const displayDate = document.getElementById('logDateText');
+  if (displayDate) displayDate.textContent = d.replace(/-/g, '/');
   renderPhaseUI(d); renderDateDots(d); renderHistory(); updateLogCount();
 }
 
@@ -886,6 +890,7 @@ window.selectFulfillment = function(v) {
 };
 
 function submitPreLog() {
+  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
   const name=marc.name,intent=(document.getElementById('logIntent')?.value||'').trim(),date=(document.getElementById('logDate')?.value||'').slice(0,10);
   if (!name)   { showToast('⚠ 先に「自己理解」タブで氏名を入力してください'); return; }
   if (!date)   { showToast('⚠ 稽古日を入力してください'); return; }
@@ -901,6 +906,7 @@ function submitPreLog() {
 }
 
 function submitLog() {
+  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
   const name=marc.name,date=(document.getElementById('logDate')?.value||'').slice(0,10);
   const scene=(document.getElementById('logScene')?.value||'').trim(),why=(document.getElementById('logWhy')?.value||'').trim(),next=(document.getElementById('logNext')?.value||'').trim();
   const decl=marc.declares[date]||{},intent=decl.intent||'';
@@ -969,6 +975,18 @@ function onNameInput(el) {
       fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
     },1000);
   }
+}
+
+function onGradeKumiChange(){
+  marc.grade=document.getElementById('gakuNenSelect')?.value||'';
+  marc.kumi=document.getElementById('kumiInput')?.value||'';
+  if(!marc.name || marc.name.length<2) return;
+  marc._fetchId++;
+  clearTimeout(window._gradeTimer);
+  window._gradeTimer=setTimeout(function(){
+    const currentId=marc._fetchId;
+    fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
+  },800);
 }
 
 function openDatePicker() {
@@ -1130,9 +1148,9 @@ document.addEventListener('DOMContentLoaded', () => {
     marc._fetchId++; const initId=marc._fetchId;
     fetchUserData(storedName,marc.grade,marc.kumi,initId);
   }
-  const today=todayJST();
-  const hiddenDate=document.getElementById('logDate'),displayDate=document.getElementById('logDateText');
-  if(hiddenDate) hiddenDate.value=today; if(displayDate) displayDate.textContent=today.replace(/-/g,'/');
+  // 稽古日は空のまま初期化し、renderLogUI()内で「未振り返りの宣言があればその日付」を
+  // 優先選択させる。これにより宣言送信後に再読み込みしても稽古日が今日に
+  // 上書きされて振り返りロックがかかる事故を防ぐ。
   renderLogUI();
   loadNews();
 });
