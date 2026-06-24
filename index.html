@@ -625,35 +625,47 @@ function sendToGAS(data, callback) {
     const type = data['記録種別'] || '';
     const name = data['氏名'] || marc.name || '';
     if (!name) { callback(true); return; }
-    setTimeout(function() {
-      const params = new URLSearchParams({ name: name });
-      if (marc.grade) params.set('grade', marc.grade);
-      if (marc.kumi)  params.set('kumi',  marc.kumi);
-      fetch(GAS_URL + '?' + params.toString(), { method: 'GET' })
-      .then(function(res) { return res.text(); })
-      .then(function(text) {
-        try {
-          const json = JSON.parse(text);
-          if (json.status !== 'ok') { callback(false); return; }
-          if (type === 'チャレンジ宣言') {
-            const date = String(data['稽古日'] || '').slice(0,10);
-            const found = (json.declares || []).some(function(r) {
-              return String(r['稽古日']||r.date||'').replace(/\//g,'-').slice(0,10) === date;
-            });
-            callback(found);
-          } else if (type === '稽古ログ') {
-            const date = String(data['稽古日']||data['date']||'').slice(0,10);
-            const found = (json.logs || []).some(function(r) {
-              return String(r.date||r['稽古日']||'').replace(/\//g,'-').slice(0,10) === date;
-            });
-            callback(found);
-          } else {
-            callback(!!(json.data && json.data['氏名']));
-          }
-        } catch(e) { callback(true); }
-      })
-      .catch(function() { callback(true); });
-    }, 2000);
+    // ★ダッシュボード側GASにLockServiceを追加したため（同時書き込み対策）、
+    //   混雑時は書き込みが数秒キュー待ちになることがある。
+    //   固定2秒の1回チェックでは「実際は成功しているのに失敗と誤判定する」
+    //   ケースが増えるため、間隔を空けて最大4回（合計約13秒）リトライする。
+    const delays = [2000, 3000, 4000, 4000]; // 2s, 5s, 9s, 13s（累積）
+    verifyWrite(0);
+    function verifyWrite(attempt) {
+      setTimeout(function() {
+        const params = new URLSearchParams({ name: name });
+        if (marc.grade) params.set('grade', marc.grade);
+        if (marc.kumi)  params.set('kumi',  marc.kumi);
+        fetch(GAS_URL + '?' + params.toString(), { method: 'GET' })
+        .then(function(res) { return res.text(); })
+        .then(function(text) {
+          try {
+            const json = JSON.parse(text);
+            if (json.status !== 'ok') { retryOrGiveUp(attempt); return; }
+            let found = false;
+            if (type === 'チャレンジ宣言') {
+              const date = String(data['稽古日'] || '').slice(0,10);
+              found = (json.declares || []).some(function(r) {
+                return String(r['稽古日']||r.date||'').replace(/\//g,'-').slice(0,10) === date;
+              });
+            } else if (type === '稽古ログ') {
+              const date = String(data['稽古日']||data['date']||'').slice(0,10);
+              found = (json.logs || []).some(function(r) {
+                return String(r.date||r['稽古日']||'').replace(/\//g,'-').slice(0,10) === date;
+              });
+            } else {
+              found = !!(json.data && json.data['氏名']);
+            }
+            if (found) { callback(true); } else { retryOrGiveUp(attempt); }
+          } catch(e) { retryOrGiveUp(attempt); }
+        })
+        .catch(function() { retryOrGiveUp(attempt); });
+      }, delays[attempt]);
+    }
+    function retryOrGiveUp(attempt) {
+      if (attempt + 1 < delays.length) { verifyWrite(attempt + 1); }
+      else { callback(false); }
+    }
   })
   .catch(function(err) { console.error('GAS送信エラー:', err); callback(false); });
 }
@@ -952,7 +964,13 @@ function renderHistory() {
 
 function updateLogCount() { const el=document.getElementById('logCount'); if(el) el.textContent=Object.keys(marc.logs).length+' 件'; }
 
-function generatePrint() { showToast('⏳ GASで一覧表を生成します。'); setTimeout(()=>{window.open(GAS_URL+'?action=generatePrint','_blank');},500); }
+function generatePrint() {
+  // ★GAS側doGet()には action==='generatePrint' に対応する処理が存在せず、
+  //   実行すると「MARCプログラム ダッシュボード GAS v6 — OK」という
+  //   無意味なページが開くだけだった（一覧表は生成されない）。
+  //   未実装であることを正直に伝える。
+  showToast('⚠ この機能は現在準備中です。担当の先生にお問い合わせください');
+}
 
 function _switchTabLegacy(tab, el) {
     const nameEl=document.getElementById('nameInput');
