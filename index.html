@@ -260,7 +260,7 @@
           <input type="date" id="cal-date" style="flex:1;">
           <input type="time" id="cal-time" style="flex:1;">
         </div>
-        <button onclick="addToCalendar()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">Googleカレンダーに追加</button>
+        <button id="cal-add-btn" onclick="addToCalendar()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">Googleカレンダーに追加</button>
       </div>
     </div>
 
@@ -1030,7 +1030,6 @@ function switchTab(tab, el) {
 }
 
 // ===== お知らせタブ =====
-const CAL_ID = 'f73c9138556948d4566156c4b995a372a35d0bb1e51b2f5c6e2b3342a25e0531@group.calendar.google.com';
 
 function loadNews() {
   fetch(GAS_URL + '?action=getNews', { method: 'GET' })
@@ -1098,16 +1097,31 @@ function addToCalendar() {
   const date  = document.getElementById('cal-date')?.value;
   const time  = document.getElementById('cal-time')?.value;
   if (!title || !date) { showToast('⚠ タイトルと日付を入力してください'); return; }
-  const d = date.replace(/-/g, '');
-  const startHH = time ? time.split(':')[0] : '09';
-  const startMM = time ? time.split(':')[1] : '00';
-  const endHH   = time ? String(parseInt(startHH)+1).padStart(2,'0') : '10';
-  const start = d + 'T' + startHH + startMM + '00';
-  const end   = d + 'T' + endHH + startMM + '00';
-  const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + start + '/' + end + '&cid=' + encodeURIComponent(CAL_ID);
-  window.open(url, '_blank');
-  document.getElementById('cal-add-form').style.display = 'none';
-  showToast('✓ Googleカレンダーで確認してください');
+  // ★以前はGoogleカレンダーの「予定追加」URLを新規タブで開き、ユーザー自身が
+  //   ポップアップ内で手動保存することに依存していた（保存を完了しなければ
+  //   何も登録されない／対象カレンダーへの書き込み権限がないと失敗する、
+  //   という不安定な仕組みだった）。ダッシュボード側の議題保存と同様、
+  //   GAS経由で確実にCalendarAppへ直接登録する方式に統一する。
+  const btn = document.getElementById('cal-add-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ 登録中…'; }
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ _token: WRITE_TOKEN, action: 'addEvent', title: title, date: date, time: time })
+  })
+  .then(function() {
+    document.getElementById('cal-add-form').style.display = 'none';
+    document.getElementById('cal-title').value = '';
+    showToast('✓ 予定を追加しました');
+    setTimeout(loadNews, 1500); // GAS側の反映後に再取得して表示に反映する
+  })
+  .catch(function(err) {
+    showToast('⚠ 登録に失敗しました。通信環境を確認してください');
+    console.error('カレンダー登録エラー:', err);
+  })
+  .finally(function() {
+    if (btn) { btn.disabled = false; btn.textContent = 'Googleカレンダーに追加'; }
+  });
 }
 
 function renderTeams(teams) {
