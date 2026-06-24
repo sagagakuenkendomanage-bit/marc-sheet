@@ -413,11 +413,18 @@
           <label class="field-label" style="margin-bottom:5px;">稽古日<span class="required">*</span></label>
           <div style="font-size:10px;color:var(--ink-muted);margin-bottom:4px;">稽古を行った当日の日付を入力してください</div>
           <input type="hidden" id="logDate" value="">
-          <div id="logDateDisplay" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="openDatePicker()">
-            <span id="logDateText">今日の日付を選択</span>
-            <span style="font-size:12px;color:var(--ink-muted);">📅</span>
+          <!-- ★モバイル(iOS/Android)では、JSからinput.showPicker()やinput.click()を
+               呼び出す方式だと反応しないことがある（PCのChromeでは動くがスマホでは
+               無視されるブラウザの仕様差）。そのため、見えないネイティブのinput自体を
+               見た目のボックスにぴったり重ねて配置し、タップが直接inputに当たる
+               ようにする（OSレベルのタップなので確実に動く）。 -->
+          <div style="position:relative;">
+            <div id="logDateDisplay" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+              <span id="logDateText">今日の日付を選択</span>
+              <span style="font-size:12px;color:var(--ink-muted);">📅</span>
+            </div>
+            <input type="date" id="logDateNative" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="onNativeDateChange(this.value)" onclick="this.value=document.getElementById('logDate').value||todayJST();">
           </div>
-          <input type="date" id="logDateNative" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;" onchange="onNativeDateChange(this.value)">
         </div>
         <div style="flex-shrink:0;text-align:right;">
           <div style="font-size:10px;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:2px;">記録者</div>
@@ -1005,11 +1012,6 @@ function onGradeKumiChange(){
     const currentId=marc._fetchId;
     fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
   },800);
-}
-
-function openDatePicker() {
-  const native=document.getElementById('logDateNative');
-  if(native){ native.value=document.getElementById('logDate').value||todayJST(); if(native.showPicker){native.showPicker();}else{native.click();} }
 }
 
 function onNativeDateChange(val) {
