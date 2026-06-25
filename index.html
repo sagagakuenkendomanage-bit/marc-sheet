@@ -766,15 +766,15 @@ function collectFormData() {
   const barsVals = getBarsValues();
   const wazas = Array.from(document.querySelectorAll('#wazaSelector .rank-btn.active')).map(b => b.textContent.trim()).join('・');
   return Object.assign({
-    氏名: (document.getElementById('nameInput')?.value||'').trim(),
-    学年: document.getElementById('gakuNenSelect')?.value||'',
-    組: document.getElementById('kumiInput')?.value||'',
-    段位級: document.getElementById('dankyuSelect')?.value||'',
-    剣道歴: document.getElementById('kendoReki')?.value||'',
-    利き手構え: document.getElementById('kikiteSelect')?.value||'',
+    氏名: ((document.getElementById('nameInput')||{}).value||'').trim(),
+    学年: (document.getElementById('gakuNenSelect')||{}).value||'',
+    組: (document.getElementById('kumiInput')||{}).value||'',
+    段位級: (document.getElementById('dankyuSelect')||{}).value||'',
+    剣道歴: (document.getElementById('kendoReki')||{}).value||'',
+    利き手構え: (document.getElementById('kikiteSelect')||{}).value||'',
     得意技: wazas,
-    今の課題感: document.getElementById('kadaikan')?.value||'',
-    個人目標: document.getElementById('kojinMokuhyo')?.value||'',
+    今の課題感: (document.getElementById('kadaikan')||{}).value||'',
+    個人目標: (document.getElementById('kojinMokuhyo')||{}).value||'',
     記録日時: new Date().toLocaleString('ja-JP'),
     記録種別: '自己理解',
   }, barsVals);
@@ -800,8 +800,8 @@ function highlightMissing(el) {
 function submitForm(type) {
   const nameEl = document.getElementById('nameInput');
   const gakunenEl = document.getElementById('gakuNenSelect');
-  const name    = (nameEl?.value||'').trim();
-  const gakunen = gakunenEl?.value||'';
+  const name    = ((nameEl||{}).value||'').trim();
+  const gakunen = (gakunenEl||{}).value||'';
   if (!name)    { showToast('⚠ 氏名を入力してください'); highlightMissing(nameEl); return; }
   if (!gakunen) { showToast('⚠ 学年を選択してください'); highlightMissing(gakunenEl); return; }
   const btn = document.querySelector('.submit-btn');
@@ -815,7 +815,7 @@ function submitForm(type) {
 }
 
 function tempSave() {
-  const name = (document.getElementById('nameInput')?.value||'').trim();
+  const name = ((document.getElementById('nameInput')||{}).value||'').trim();
   if (!name) { showToast('⚠ 氏名を入力してから保存してください'); return; }
   const data = collectFormData();
   const lsKey = makeLocalKey(name, data['学年'], data['組']);
@@ -849,7 +849,7 @@ function onLogDateChange() { renderLogUI(); }
 function renderDateDots(currentDate) {
   const container = document.getElementById('dateDotList');
   if (!container) return;
-  const cur = currentDate || (document.getElementById('logDate')?.value||'').slice(0,10);
+  const cur = currentDate || ((document.getElementById('logDate')||{}).value||'').slice(0,10);
   const pending = Object.keys(marc.declares).filter(d => !marc.logs[d]).sort().reverse();
   const done    = Object.keys(marc.logs).sort().reverse();
   if (!pending.length && !done.length) { container.innerHTML = ''; return; }
@@ -933,8 +933,8 @@ window.selectFulfillment = function(v) {
 };
 
 function submitPreLog() {
-  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
-  const name=marc.name,intentEl=document.getElementById('logIntent'),intent=(intentEl?.value||'').trim(),dateEl=document.getElementById('logDate'),date=(dateEl?.value||'').slice(0,10);
+  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||marc.grade; marc.kumi=(document.getElementById('kumiInput')||{}).value||marc.kumi;
+  const name=marc.name,intentEl=document.getElementById('logIntent'),intent=((intentEl||{}).value||'').trim(),dateEl=document.getElementById('logDate'),date=((dateEl||{}).value||'').slice(0,10);
   if (!name)   { showToast('⚠ 先に「自己理解」タブで氏名を入力してください'); return; }
   if (!date)   { showToast('⚠ 稽古日を入力してください'); highlightMissing(document.getElementById('logDateDisplay')); return; }
   if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); highlightMissing(intentEl); return; }
@@ -949,9 +949,9 @@ function submitPreLog() {
 }
 
 function submitLog() {
-  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
-  const name=marc.name,date=(document.getElementById('logDate')?.value||'').slice(0,10);
-  const scene=(document.getElementById('logScene')?.value||'').trim(),why=(document.getElementById('logWhy')?.value||'').trim(),next=(document.getElementById('logNext')?.value||'').trim();
+  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||marc.grade; marc.kumi=(document.getElementById('kumiInput')||{}).value||marc.kumi;
+  const name=marc.name,date=((document.getElementById('logDate')||{}).value||'').slice(0,10);
+  const scene=((document.getElementById('logScene')||{}).value||'').trim(),why=((document.getElementById('logWhy')||{}).value||'').trim(),next=((document.getElementById('logNext')||{}).value||'').trim();
   const decl=marc.declares[date]||{},intent=decl.intent||'';
   if (!name)           { showToast('⚠ 氏名が設定されていません'); return; }
   if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); highlightMissing(document.getElementById('fulfillmentGrid')); return; }
@@ -1006,7 +1006,7 @@ function generatePrint() {
 function _switchTabLegacy(tab, el) {
     const nameEl=document.getElementById('nameInput');
     if(nameEl&&nameEl.value.trim()){
-      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
+      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=(document.getElementById('gakuNenSelect')||{}).value||''; marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
       LS.set(LS_NAME,marc.name);
       const logName=document.getElementById('logUserName'); if(logName){logName.textContent=marc.name;logName.style.color='var(--primary)';}
     }
@@ -1019,7 +1019,7 @@ function onNameInput(el) {
   clearTimeout(window._nameTimer);
   if(vNorm.length>=2){
     window._nameTimer=setTimeout(function(){
-      marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
+      marc.grade=(document.getElementById('gakuNenSelect')||{}).value||''; marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
       const currentId=marc._fetchId;
       fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
     },1000);
@@ -1027,8 +1027,8 @@ function onNameInput(el) {
 }
 
 function onGradeKumiChange(){
-  marc.grade=document.getElementById('gakuNenSelect')?.value||'';
-  marc.kumi=document.getElementById('kumiInput')?.value||'';
+  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||'';
+  marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
   if(!marc.name || marc.name.length<2) return;
   marc._fetchId++;
   clearTimeout(window._gradeTimer);
@@ -1117,9 +1117,9 @@ function toggleCalAdd(){
 }
 
 function addToCalendar() {
-  const title = document.getElementById('cal-title')?.value.trim();
-  const date  = document.getElementById('cal-date')?.value;
-  const time  = document.getElementById('cal-time')?.value;
+  const title = ((document.getElementById('cal-title')||{}).value||'').trim();
+  const date  = (document.getElementById('cal-date')||{}).value;
+  const time  = (document.getElementById('cal-time')||{}).value;
   if (!title || !date) { showToast('⚠ タイトルと日付を入力してください'); return; }
   // ★以前はGoogleカレンダーの「予定追加」URLを新規タブで開き、ユーザー自身が
   //   ポップアップ内で手動保存することに依存していた（保存を完了しなければ
