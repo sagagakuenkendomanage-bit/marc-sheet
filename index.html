@@ -786,11 +786,24 @@ function makeLocalKey(name, grade, kumi) {
   return 'marc_profile_' + name + (g ? '_' + g : '') + (k ? '_' + k : '');
 }
 
+// ★以前はトーストのみで警告していたが、初めて使う生徒は小さい警告に気づかず
+//   「ボタンを押しても何も起きない」と感じてしまうケースがあった。
+//   該当欄を赤枠でハイライト＋自動スクロールして見逃しにくくする（全送信フォーム共通）。
+function highlightMissing(el) {
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.style.borderColor = 'var(--red, #dc2626)';
+  el.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.15)';
+  setTimeout(function() { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2500);
+}
+
 function submitForm(type) {
-  const name    = (document.getElementById('nameInput')?.value||'').trim();
-  const gakunen = document.getElementById('gakuNenSelect')?.value||'';
-  if (!name)    { showToast('⚠ 氏名を入力してください'); return; }
-  if (!gakunen) { showToast('⚠ 学年を選択してください'); return; }
+  const nameEl = document.getElementById('nameInput');
+  const gakunenEl = document.getElementById('gakuNenSelect');
+  const name    = (nameEl?.value||'').trim();
+  const gakunen = gakunenEl?.value||'';
+  if (!name)    { showToast('⚠ 氏名を入力してください'); highlightMissing(nameEl); return; }
+  if (!gakunen) { showToast('⚠ 学年を選択してください'); highlightMissing(gakunenEl); return; }
   const btn = document.querySelector('.submit-btn');
   if (btn) { btn.textContent = '送信中…'; btn.disabled = true; }
   const data = collectFormData();
@@ -921,10 +934,10 @@ window.selectFulfillment = function(v) {
 
 function submitPreLog() {
   marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
-  const name=marc.name,intent=(document.getElementById('logIntent')?.value||'').trim(),date=(document.getElementById('logDate')?.value||'').slice(0,10);
+  const name=marc.name,intentEl=document.getElementById('logIntent'),intent=(intentEl?.value||'').trim(),dateEl=document.getElementById('logDate'),date=(dateEl?.value||'').slice(0,10);
   if (!name)   { showToast('⚠ 先に「自己理解」タブで氏名を入力してください'); return; }
-  if (!date)   { showToast('⚠ 稽古日を入力してください'); return; }
-  if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); return; }
+  if (!date)   { showToast('⚠ 稽古日を入力してください'); highlightMissing(document.getElementById('logDateDisplay')); return; }
+  if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); highlightMissing(intentEl); return; }
   const btn=document.getElementById('preSubmitBtn');
   if (btn) { btn.textContent='送信中…'; btn.disabled=true; }
   const data={記録種別:'チャレンジ宣言',氏名:name,学年:marc.grade,組:marc.kumi,稽古日:date,試したいこと:intent,intent:intent,timestamp:new Date().toLocaleString('ja-JP')};
@@ -941,10 +954,10 @@ function submitLog() {
   const scene=(document.getElementById('logScene')?.value||'').trim(),why=(document.getElementById('logWhy')?.value||'').trim(),next=(document.getElementById('logNext')?.value||'').trim();
   const decl=marc.declares[date]||{},intent=decl.intent||'';
   if (!name)           { showToast('⚠ 氏名が設定されていません'); return; }
-  if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); return; }
-  if (!scene)          { showToast('⚠ ①の結果を入力してください'); return; }
-  if (!why)            { showToast('⚠ ②の原因分析を入力してください'); return; }
-  if (!next)           { showToast('⚠ ③の次への一手を入力してください'); return; }
+  if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); highlightMissing(document.getElementById('fulfillmentGrid')); return; }
+  if (!scene)          { showToast('⚠ ①の結果を入力してください'); highlightMissing(document.getElementById('logScene')); return; }
+  if (!why)            { showToast('⚠ ②の原因分析を入力してください'); highlightMissing(document.getElementById('logWhy')); return; }
+  if (!next)           { showToast('⚠ ③の次への一手を入力してください'); highlightMissing(document.getElementById('logNext')); return; }
   const btn=document.querySelector('.post-submit-btn');
   if (btn) { btn.textContent='送信中…'; btn.disabled=true; }
   const data={記録種別:'稽古ログ',氏名:name,学年:marc.grade,組:marc.kumi,稽古日:date,date:date,name:name,intent:intent,試したいこと:intent,scene:scene,why:why,next:next,fulfillment:fulfillmentVal+'/5',timestamp:new Date().toLocaleString('ja-JP')};
@@ -1182,6 +1195,16 @@ function renderTeams(teams) {
 function loadTeams() { /* renderTeamsに移行 */ }
 
 function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ★何度か「ボタンを押しても何も起きない」という報告があったが、リモートでの
+//   原因特定が難しいため、JSエラーが発生した場合に画面上のトーストで
+//   見えるようにする（次回同じ現象が起きた時、エラー内容を確認できるように）。
+window.addEventListener('error', function(e) {
+  try { showToast('⚠ エラーが発生しました：' + (e.message || '不明') + '（画面のスクショを先生に送ってください）'); } catch(_) {}
+});
+window.addEventListener('unhandledrejection', function(e) {
+  try { showToast('⚠ 通信エラーが発生しました：' + (e.reason && e.reason.message || e.reason || '不明') + '（画面のスクショを先生に送ってください）'); } catch(_) {}
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   marc.name=''; marc.grade=''; marc.kumi='';
