@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a5fa8">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MARCシート">
-<link rel="apple-touch-icon" href="icon-ios-180.png">
-<link rel="apple-touch-icon" sizes="152x152" href="icon-ios-152.png">
-<link rel="apple-touch-icon" sizes="167x167" href="icon-ios-167.png">
-<link rel="apple-touch-icon" sizes="1024x1024" href="icon-ios-1024.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-android-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-android-512.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>剣道部 MARCシート</title>
@@ -271,7 +260,7 @@
           <input type="date" id="cal-date" style="flex:1;">
           <input type="time" id="cal-time" style="flex:1;">
         </div>
-        <button id="cal-add-btn" onclick="addToCalendar()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">Googleカレンダーに追加</button>
+        <button onclick="addToCalendar()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">Googleカレンダーに追加</button>
       </div>
     </div>
 
@@ -424,18 +413,11 @@
           <label class="field-label" style="margin-bottom:5px;">稽古日<span class="required">*</span></label>
           <div style="font-size:10px;color:var(--ink-muted);margin-bottom:4px;">稽古を行った当日の日付を入力してください</div>
           <input type="hidden" id="logDate" value="">
-          <!-- ★モバイル(iOS/Android)では、JSからinput.showPicker()やinput.click()を
-               呼び出す方式だと反応しないことがある（PCのChromeでは動くがスマホでは
-               無視されるブラウザの仕様差）。そのため、見えないネイティブのinput自体を
-               見た目のボックスにぴったり重ねて配置し、タップが直接inputに当たる
-               ようにする（OSレベルのタップなので確実に動く）。 -->
-          <div style="position:relative;">
-            <div id="logDateDisplay" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-              <span id="logDateText">今日の日付を選択</span>
-              <span style="font-size:12px;color:var(--ink-muted);">📅</span>
-            </div>
-            <input type="date" id="logDateNative" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="onNativeDateChange(this.value)" onclick="this.value=document.getElementById('logDate').value||todayJST();">
+          <div id="logDateDisplay" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="openDatePicker()">
+            <span id="logDateText">今日の日付を選択</span>
+            <span style="font-size:12px;color:var(--ink-muted);">📅</span>
           </div>
+          <input type="date" id="logDateNative" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;" onchange="onNativeDateChange(this.value)">
         </div>
         <div style="flex-shrink:0;text-align:right;">
           <div style="font-size:10px;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:2px;">記録者</div>
@@ -643,47 +625,35 @@ function sendToGAS(data, callback) {
     const type = data['記録種別'] || '';
     const name = data['氏名'] || marc.name || '';
     if (!name) { callback(true); return; }
-    // ★ダッシュボード側GASにLockServiceを追加したため（同時書き込み対策）、
-    //   混雑時は書き込みが数秒キュー待ちになることがある。
-    //   固定2秒の1回チェックでは「実際は成功しているのに失敗と誤判定する」
-    //   ケースが増えるため、間隔を空けて最大4回（合計約13秒）リトライする。
-    const delays = [2000, 3000, 4000, 4000]; // 2s, 5s, 9s, 13s（累積）
-    verifyWrite(0);
-    function verifyWrite(attempt) {
-      setTimeout(function() {
-        const params = new URLSearchParams({ name: name });
-        if (marc.grade) params.set('grade', marc.grade);
-        if (marc.kumi)  params.set('kumi',  marc.kumi);
-        fetch(GAS_URL + '?' + params.toString(), { method: 'GET' })
-        .then(function(res) { return res.text(); })
-        .then(function(text) {
-          try {
-            const json = JSON.parse(text);
-            if (json.status !== 'ok') { retryOrGiveUp(attempt); return; }
-            let found = false;
-            if (type === 'チャレンジ宣言') {
-              const date = String(data['稽古日'] || '').slice(0,10);
-              found = (json.declares || []).some(function(r) {
-                return String(r['稽古日']||r.date||'').replace(/\//g,'-').slice(0,10) === date;
-              });
-            } else if (type === '稽古ログ') {
-              const date = String(data['稽古日']||data['date']||'').slice(0,10);
-              found = (json.logs || []).some(function(r) {
-                return String(r.date||r['稽古日']||'').replace(/\//g,'-').slice(0,10) === date;
-              });
-            } else {
-              found = !!(json.data && json.data['氏名']);
-            }
-            if (found) { callback(true); } else { retryOrGiveUp(attempt); }
-          } catch(e) { retryOrGiveUp(attempt); }
-        })
-        .catch(function() { retryOrGiveUp(attempt); });
-      }, delays[attempt]);
-    }
-    function retryOrGiveUp(attempt) {
-      if (attempt + 1 < delays.length) { verifyWrite(attempt + 1); }
-      else { callback(false); }
-    }
+    setTimeout(function() {
+      const params = new URLSearchParams({ name: name });
+      if (marc.grade) params.set('grade', marc.grade);
+      if (marc.kumi)  params.set('kumi',  marc.kumi);
+      fetch(GAS_URL + '?' + params.toString(), { method: 'GET' })
+      .then(function(res) { return res.text(); })
+      .then(function(text) {
+        try {
+          const json = JSON.parse(text);
+          if (json.status !== 'ok') { callback(false); return; }
+          if (type === 'チャレンジ宣言') {
+            const date = String(data['稽古日'] || '').slice(0,10);
+            const found = (json.declares || []).some(function(r) {
+              return String(r['稽古日']||r.date||'').replace(/\//g,'-').slice(0,10) === date;
+            });
+            callback(found);
+          } else if (type === '稽古ログ') {
+            const date = String(data['稽古日']||data['date']||'').slice(0,10);
+            const found = (json.logs || []).some(function(r) {
+              return String(r.date||r['稽古日']||'').replace(/\//g,'-').slice(0,10) === date;
+            });
+            callback(found);
+          } else {
+            callback(!!(json.data && json.data['氏名']));
+          }
+        } catch(e) { callback(true); }
+      })
+      .catch(function() { callback(true); });
+    }, 2000);
   })
   .catch(function(err) { console.error('GAS送信エラー:', err); callback(false); });
 }
@@ -766,15 +736,15 @@ function collectFormData() {
   const barsVals = getBarsValues();
   const wazas = Array.from(document.querySelectorAll('#wazaSelector .rank-btn.active')).map(b => b.textContent.trim()).join('・');
   return Object.assign({
-    氏名: ((document.getElementById('nameInput')||{}).value||'').trim(),
-    学年: (document.getElementById('gakuNenSelect')||{}).value||'',
-    組: (document.getElementById('kumiInput')||{}).value||'',
-    段位級: (document.getElementById('dankyuSelect')||{}).value||'',
-    剣道歴: (document.getElementById('kendoReki')||{}).value||'',
-    利き手構え: (document.getElementById('kikiteSelect')||{}).value||'',
+    氏名: (document.getElementById('nameInput')?.value||'').trim(),
+    学年: document.getElementById('gakuNenSelect')?.value||'',
+    組: document.getElementById('kumiInput')?.value||'',
+    段位級: document.getElementById('dankyuSelect')?.value||'',
+    剣道歴: document.getElementById('kendoReki')?.value||'',
+    利き手構え: document.getElementById('kikiteSelect')?.value||'',
     得意技: wazas,
-    今の課題感: (document.getElementById('kadaikan')||{}).value||'',
-    個人目標: (document.getElementById('kojinMokuhyo')||{}).value||'',
+    今の課題感: document.getElementById('kadaikan')?.value||'',
+    個人目標: document.getElementById('kojinMokuhyo')?.value||'',
     記録日時: new Date().toLocaleString('ja-JP'),
     記録種別: '自己理解',
   }, barsVals);
@@ -786,24 +756,11 @@ function makeLocalKey(name, grade, kumi) {
   return 'marc_profile_' + name + (g ? '_' + g : '') + (k ? '_' + k : '');
 }
 
-// ★以前はトーストのみで警告していたが、初めて使う生徒は小さい警告に気づかず
-//   「ボタンを押しても何も起きない」と感じてしまうケースがあった。
-//   該当欄を赤枠でハイライト＋自動スクロールして見逃しにくくする（全送信フォーム共通）。
-function highlightMissing(el) {
-  if (!el) return;
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  el.style.borderColor = 'var(--red, #dc2626)';
-  el.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.15)';
-  setTimeout(function() { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2500);
-}
-
 function submitForm(type) {
-  const nameEl = document.getElementById('nameInput');
-  const gakunenEl = document.getElementById('gakuNenSelect');
-  const name    = ((nameEl||{}).value||'').trim();
-  const gakunen = (gakunenEl||{}).value||'';
-  if (!name)    { showToast('⚠ 氏名を入力してください'); highlightMissing(nameEl); return; }
-  if (!gakunen) { showToast('⚠ 学年を選択してください'); highlightMissing(gakunenEl); return; }
+  const name    = (document.getElementById('nameInput')?.value||'').trim();
+  const gakunen = document.getElementById('gakuNenSelect')?.value||'';
+  if (!name)    { showToast('⚠ 氏名を入力してください'); return; }
+  if (!gakunen) { showToast('⚠ 学年を選択してください'); return; }
   const btn = document.querySelector('.submit-btn');
   if (btn) { btn.textContent = '送信中…'; btn.disabled = true; }
   const data = collectFormData();
@@ -815,7 +772,7 @@ function submitForm(type) {
 }
 
 function tempSave() {
-  const name = ((document.getElementById('nameInput')||{}).value||'').trim();
+  const name = (document.getElementById('nameInput')?.value||'').trim();
   if (!name) { showToast('⚠ 氏名を入力してから保存してください'); return; }
   const data = collectFormData();
   const lsKey = makeLocalKey(name, data['学年'], data['組']);
@@ -849,7 +806,7 @@ function onLogDateChange() { renderLogUI(); }
 function renderDateDots(currentDate) {
   const container = document.getElementById('dateDotList');
   if (!container) return;
-  const cur = currentDate || ((document.getElementById('logDate')||{}).value||'').slice(0,10);
+  const cur = currentDate || (document.getElementById('logDate')?.value||'').slice(0,10);
   const pending = Object.keys(marc.declares).filter(d => !marc.logs[d]).sort().reverse();
   const done    = Object.keys(marc.logs).sort().reverse();
   if (!pending.length && !done.length) { container.innerHTML = ''; return; }
@@ -933,11 +890,11 @@ window.selectFulfillment = function(v) {
 };
 
 function submitPreLog() {
-  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||marc.grade; marc.kumi=(document.getElementById('kumiInput')||{}).value||marc.kumi;
-  const name=marc.name,intentEl=document.getElementById('logIntent'),intent=((intentEl||{}).value||'').trim(),dateEl=document.getElementById('logDate'),date=((dateEl||{}).value||'').slice(0,10);
+  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
+  const name=marc.name,intent=(document.getElementById('logIntent')?.value||'').trim(),date=(document.getElementById('logDate')?.value||'').slice(0,10);
   if (!name)   { showToast('⚠ 先に「自己理解」タブで氏名を入力してください'); return; }
-  if (!date)   { showToast('⚠ 稽古日を入力してください'); highlightMissing(document.getElementById('logDateDisplay')); return; }
-  if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); highlightMissing(intentEl); return; }
+  if (!date)   { showToast('⚠ 稽古日を入力してください'); return; }
+  if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); return; }
   const btn=document.getElementById('preSubmitBtn');
   if (btn) { btn.textContent='送信中…'; btn.disabled=true; }
   const data={記録種別:'チャレンジ宣言',氏名:name,学年:marc.grade,組:marc.kumi,稽古日:date,試したいこと:intent,intent:intent,timestamp:new Date().toLocaleString('ja-JP')};
@@ -949,15 +906,15 @@ function submitPreLog() {
 }
 
 function submitLog() {
-  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||marc.grade; marc.kumi=(document.getElementById('kumiInput')||{}).value||marc.kumi;
-  const name=marc.name,date=((document.getElementById('logDate')||{}).value||'').slice(0,10);
-  const scene=((document.getElementById('logScene')||{}).value||'').trim(),why=((document.getElementById('logWhy')||{}).value||'').trim(),next=((document.getElementById('logNext')||{}).value||'').trim();
+  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
+  const name=marc.name,date=(document.getElementById('logDate')?.value||'').slice(0,10);
+  const scene=(document.getElementById('logScene')?.value||'').trim(),why=(document.getElementById('logWhy')?.value||'').trim(),next=(document.getElementById('logNext')?.value||'').trim();
   const decl=marc.declares[date]||{},intent=decl.intent||'';
   if (!name)           { showToast('⚠ 氏名が設定されていません'); return; }
-  if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); highlightMissing(document.getElementById('fulfillmentGrid')); return; }
-  if (!scene)          { showToast('⚠ ①の結果を入力してください'); highlightMissing(document.getElementById('logScene')); return; }
-  if (!why)            { showToast('⚠ ②の原因分析を入力してください'); highlightMissing(document.getElementById('logWhy')); return; }
-  if (!next)           { showToast('⚠ ③の次への一手を入力してください'); highlightMissing(document.getElementById('logNext')); return; }
+  if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); return; }
+  if (!scene)          { showToast('⚠ ①の結果を入力してください'); return; }
+  if (!why)            { showToast('⚠ ②の原因分析を入力してください'); return; }
+  if (!next)           { showToast('⚠ ③の次への一手を入力してください'); return; }
   const btn=document.querySelector('.post-submit-btn');
   if (btn) { btn.textContent='送信中…'; btn.disabled=true; }
   const data={記録種別:'稽古ログ',氏名:name,学年:marc.grade,組:marc.kumi,稽古日:date,date:date,name:name,intent:intent,試したいこと:intent,scene:scene,why:why,next:next,fulfillment:fulfillmentVal+'/5',timestamp:new Date().toLocaleString('ja-JP')};
@@ -995,18 +952,12 @@ function renderHistory() {
 
 function updateLogCount() { const el=document.getElementById('logCount'); if(el) el.textContent=Object.keys(marc.logs).length+' 件'; }
 
-function generatePrint() {
-  // ★GAS側doGet()には action==='generatePrint' に対応する処理が存在せず、
-  //   実行すると「MARCプログラム ダッシュボード GAS v6 — OK」という
-  //   無意味なページが開くだけだった（一覧表は生成されない）。
-  //   未実装であることを正直に伝える。
-  showToast('⚠ この機能は現在準備中です。担当の先生にお問い合わせください');
-}
+function generatePrint() { showToast('⏳ GASで一覧表を生成します。'); setTimeout(()=>{window.open(GAS_URL+'?action=generatePrint','_blank');},500); }
 
 function _switchTabLegacy(tab, el) {
     const nameEl=document.getElementById('nameInput');
     if(nameEl&&nameEl.value.trim()){
-      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=(document.getElementById('gakuNenSelect')||{}).value||''; marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
+      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
       LS.set(LS_NAME,marc.name);
       const logName=document.getElementById('logUserName'); if(logName){logName.textContent=marc.name;logName.style.color='var(--primary)';}
     }
@@ -1019,7 +970,7 @@ function onNameInput(el) {
   clearTimeout(window._nameTimer);
   if(vNorm.length>=2){
     window._nameTimer=setTimeout(function(){
-      marc.grade=(document.getElementById('gakuNenSelect')||{}).value||''; marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
+      marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
       const currentId=marc._fetchId;
       fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
     },1000);
@@ -1027,8 +978,8 @@ function onNameInput(el) {
 }
 
 function onGradeKumiChange(){
-  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||'';
-  marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
+  marc.grade=document.getElementById('gakuNenSelect')?.value||'';
+  marc.kumi=document.getElementById('kumiInput')?.value||'';
   if(!marc.name || marc.name.length<2) return;
   marc._fetchId++;
   clearTimeout(window._gradeTimer);
@@ -1036,6 +987,11 @@ function onGradeKumiChange(){
     const currentId=marc._fetchId;
     fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
   },800);
+}
+
+function openDatePicker() {
+  const native=document.getElementById('logDateNative');
+  if(native){ native.value=document.getElementById('logDate').value||todayJST(); if(native.showPicker){native.showPicker();}else{native.click();} }
 }
 
 function onNativeDateChange(val) {
@@ -1054,6 +1010,7 @@ function switchTab(tab, el) {
 }
 
 // ===== お知らせタブ =====
+const CAL_ID = 'f73c9138556948d4566156c4b995a372a35d0bb1e51b2f5c6e2b3342a25e0531@group.calendar.google.com';
 
 function loadNews() {
   fetch(GAS_URL + '?action=getNews', { method: 'GET' })
@@ -1117,35 +1074,20 @@ function toggleCalAdd(){
 }
 
 function addToCalendar() {
-  const title = ((document.getElementById('cal-title')||{}).value||'').trim();
-  const date  = (document.getElementById('cal-date')||{}).value;
-  const time  = (document.getElementById('cal-time')||{}).value;
+  const title = document.getElementById('cal-title')?.value.trim();
+  const date  = document.getElementById('cal-date')?.value;
+  const time  = document.getElementById('cal-time')?.value;
   if (!title || !date) { showToast('⚠ タイトルと日付を入力してください'); return; }
-  // ★以前はGoogleカレンダーの「予定追加」URLを新規タブで開き、ユーザー自身が
-  //   ポップアップ内で手動保存することに依存していた（保存を完了しなければ
-  //   何も登録されない／対象カレンダーへの書き込み権限がないと失敗する、
-  //   という不安定な仕組みだった）。ダッシュボード側の議題保存と同様、
-  //   GAS経由で確実にCalendarAppへ直接登録する方式に統一する。
-  const btn = document.getElementById('cal-add-btn');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ 登録中…'; }
-  fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ _token: WRITE_TOKEN, action: 'addEvent', title: title, date: date, time: time })
-  })
-  .then(function() {
-    document.getElementById('cal-add-form').style.display = 'none';
-    document.getElementById('cal-title').value = '';
-    showToast('✓ 予定を追加しました');
-    setTimeout(loadNews, 1500); // GAS側の反映後に再取得して表示に反映する
-  })
-  .catch(function(err) {
-    showToast('⚠ 登録に失敗しました。通信環境を確認してください');
-    console.error('カレンダー登録エラー:', err);
-  })
-  .finally(function() {
-    if (btn) { btn.disabled = false; btn.textContent = 'Googleカレンダーに追加'; }
-  });
+  const d = date.replace(/-/g, '');
+  const startHH = time ? time.split(':')[0] : '09';
+  const startMM = time ? time.split(':')[1] : '00';
+  const endHH   = time ? String(parseInt(startHH)+1).padStart(2,'0') : '10';
+  const start = d + 'T' + startHH + startMM + '00';
+  const end   = d + 'T' + endHH + startMM + '00';
+  const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + start + '/' + end + '&cid=' + encodeURIComponent(CAL_ID);
+  window.open(url, '_blank');
+  document.getElementById('cal-add-form').style.display = 'none';
+  showToast('✓ Googleカレンダーで確認してください');
 }
 
 function renderTeams(teams) {
@@ -1180,10 +1122,14 @@ function renderTeams(teams) {
         '</div>' +
       '</div>' +
       '<div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px;">' + escH(memberStr) + '</div>' +
-      '<div style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:10px;">' +
+      '<div style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:8px;">' +
         '<div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">稽古テーマ</div>' +
         '<div style="font-size:12px;color:' + (t.theme ? 'var(--ink)' : 'var(--ink-muted)') + ';' + (t.theme ? '' : 'font-style:italic;') + '">' + escH(t.theme || '自由に稽古テーマを設定してください') + '</div>' +
       '</div>' +
+      (t.criteria ? '<div style="background:#f5f7fa;border-left:3px solid #888;border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:10px;">' +
+        '<div style="font-size:10px;font-weight:700;color:#666;margin-bottom:2px;letter-spacing:.06em;">選出基準</div>' +
+        '<div style="font-size:12px;color:var(--ink);line-height:1.6;">' + escH(t.criteria) + '</div>' +
+      '</div>' : '') +
       '<div style="border-top:1px solid var(--border-soft);padding-top:10px;">' +
         '<div style="font-size:10px;font-weight:700;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:8px;">🎯 チャレンジ宣言</div>' +
         '<div style="display:flex;flex-direction:column;gap:6px;">' + declaresHtml + '</div>' +
@@ -1195,16 +1141,6 @@ function renderTeams(teams) {
 function loadTeams() { /* renderTeamsに移行 */ }
 
 function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// ★何度か「ボタンを押しても何も起きない」という報告があったが、リモートでの
-//   原因特定が難しいため、JSエラーが発生した場合に画面上のトーストで
-//   見えるようにする（次回同じ現象が起きた時、エラー内容を確認できるように）。
-window.addEventListener('error', function(e) {
-  try { showToast('⚠ エラーが発生しました：' + (e.message || '不明') + '（画面のスクショを先生に送ってください）'); } catch(_) {}
-});
-window.addEventListener('unhandledrejection', function(e) {
-  try { showToast('⚠ 通信エラーが発生しました：' + (e.reason && e.reason.message || e.reason || '不明') + '（画面のスクショを先生に送ってください）'); } catch(_) {}
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   marc.name=''; marc.grade=''; marc.kumi='';
