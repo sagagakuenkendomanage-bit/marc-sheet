@@ -214,8 +214,12 @@
   .leaders-table th:last-child { border-right: none; }
   .leaders-table tbody tr.lead-main { border-bottom: 1px solid var(--border-soft); cursor: pointer; transition: background .2s; }
   .leaders-table tbody tr.lead-main:hover { background: var(--surface-2); }
-  .leaders-table tbody tr.lead-detail { display: none; background: var(--surface-2); }
-  .leaders-table tbody tr.lead-detail.active { display: table-row; }
+  .leaders-table tbody tr.lead-main.expanded { background: rgba(26,58,107,0.06); }
+  /* 詳細パネル（横スクロールの外・カード型） */
+  .lead-detail-panel { display: none; margin-top: 12px; background: var(--surface-2); border: 1.5px solid var(--primary); border-radius: var(--radius-md); overflow: hidden; }
+  .lead-detail-panel.active { display: block; }
+  .lead-detail-head { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-lt) 100%); color: #fff; font-size: 13px; font-weight: 700; padding: 12px 16px; letter-spacing: .04em; display: flex; align-items: center; gap: 8px; }
+  .lead-detail-head-num { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 50%; font-size: 12px; font-weight: 800; }
   .leaders-table td { padding: 0 12px; height: 52px; font-size: 12px; color: var(--ink-soft); border-right: 1px solid var(--border-soft); vertical-align: middle; }
   .leaders-table td:last-child { border-right: none; }
   .lead-cat { background: rgba(26,58,107,0.04); text-align: center; width: 78px; }
@@ -310,6 +314,7 @@
           <tbody id="leaders-tbody"></tbody>
         </table>
       </div>
+      <div id="leaders-detail-area"></div>
     </div>
 
 
@@ -1274,12 +1279,15 @@ let leadersData = {};
 
 function buildLeadersTable() {
   const tbody = document.getElementById('leaders-tbody');
-  if (!tbody) return;
+  const detailArea = document.getElementById('leaders-detail-area');
+  if (!tbody || !detailArea) return;
   tbody.innerHTML = '';
+  detailArea.innerHTML = '';
   leaderRoles.forEach(function(r, idx) {
-    // メイン行
+    // メイン行（テーブル内）
     const main = document.createElement('tr');
     main.className = 'lead-main';
+    main.dataset.idx = idx;
     main.onclick = function(){ toggleLeaderDetail(idx); };
     main.innerHTML =
       '<td class="lead-cat"><span class="lead-cat-icon"><svg viewBox="0 0 24 24">'+r.icon+'</svg></span>'
@@ -1290,9 +1298,9 @@ function buildLeadersTable() {
       +'<td class="lead-plan" onclick="event.stopPropagation();editLeaderPlan('+idx+')"><div class="lead-plan-box" data-idx="'+idx+'"></div></td>';
     tbody.appendChild(main);
 
-    // 詳細行
-    const detail = document.createElement('tr');
-    detail.className = 'lead-detail';
+    // 詳細パネル（テーブルの外＝横スクロールの外）
+    const detail = document.createElement('div');
+    detail.className = 'lead-detail-panel';
     detail.dataset.idx = idx;
     let personRows = '';
     for (let i = 0; i < r.max; i++) {
@@ -1300,7 +1308,8 @@ function buildLeadersTable() {
         +'<input type="text" class="lead-person-input" data-idx="'+idx+'" data-p="'+i+'" placeholder="名前を入力" oninput="updateLeaderDisplay('+idx+')"></div>';
     }
     detail.innerHTML =
-      '<td colspan="4"><div class="lead-detail-content">'
+      '<div class="lead-detail-content">'
+        +'<div class="lead-detail-head"><span class="lead-detail-head-num">'+r.num+'</span>'+r.label+' ｜ '+r.role+'</div>'
         +'<div class="lead-detail-sec"><div class="lead-detail-title">担当者（最大'+r.max+'名）</div>'
           +'<div class="lead-person-inputs">'+personRows+'</div></div>'
         +'<div class="lead-detail-sec"><div class="lead-detail-title">期待役割</div>'
@@ -1308,18 +1317,25 @@ function buildLeadersTable() {
         +'<div class="lead-detail-sec"><div class="lead-detail-title">月別実施計画</div>'
           +'<div class="lead-plans-container" id="lead-plans-'+idx+'"></div>'
           +'<button class="lead-add-plan" onclick="addLeaderPlan(event,'+idx+')">＋ 月別計画追加</button></div>'
-        +'<button class="lead-save-btn" onclick="saveLeader(event,'+idx+')">✦ この役割を保存する</button>'
-      +'</div></td>';
-    tbody.appendChild(detail);
+        +'<button class="lead-save-btn" onclick="saveLeader(event,'+idx+')">✦ 保存する</button>'
+      +'</div>';
+    detailArea.appendChild(detail);
   });
 }
 
 function toggleLeaderDetail(idx) {
-  const main = document.querySelectorAll('.leaders-table .lead-main')[idx];
-  const detail = document.querySelector('.leaders-table .lead-detail[data-idx="'+idx+'"]');
-  if (!main || !detail) return;
-  main.classList.toggle('expanded');
-  detail.classList.toggle('active');
+  const main = document.querySelector('.leaders-table .lead-main[data-idx="'+idx+'"]');
+  const panel = document.querySelector('.lead-detail-panel[data-idx="'+idx+'"]');
+  if (!main || !panel) return;
+  const isOpen = panel.classList.contains('active');
+  // 他を閉じる
+  document.querySelectorAll('.lead-detail-panel.active').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.leaders-table .lead-main.expanded').forEach(function(m){ m.classList.remove('expanded'); });
+  // 自分をトグル
+  if (!isOpen) {
+    main.classList.add('expanded');
+    panel.classList.add('active');
+  }
 }
 
 function updateLeaderDisplay(idx) {
@@ -1366,7 +1382,7 @@ function addLeaderPlan(e, idx) {
   const item = document.createElement('div');
   item.className = 'lead-plan-item';
   item.innerHTML =
-    '<input type="text" class="lead-plan-month-in" placeholder="○月" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'
+    '<input type="text" class="lead-plan-month-in" placeholder="" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'
     +'<textarea class="lead-plan-text-in" placeholder="実施計画を記入" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')"></textarea>'
     +'<button class="lead-plan-del" onclick="removeLeaderPlan(this,'+idx+')">✕</button>';
   container.appendChild(item);
@@ -1379,11 +1395,9 @@ function removeLeaderPlan(btn, idx) {
 }
 
 function editLeaderPlan(idx) {
-  const main = document.querySelectorAll('.leaders-table .lead-main')[idx];
-  const detail = document.querySelector('.leaders-table .lead-detail[data-idx="'+idx+'"]');
-  if (main && detail && !main.classList.contains('expanded')) {
-    main.classList.add('expanded');
-    detail.classList.add('active');
+  const panel = document.querySelector('.lead-detail-panel[data-idx="'+idx+'"]');
+  if (panel && !panel.classList.contains('active')) {
+    toggleLeaderDetail(idx);
   }
   const container = document.getElementById('lead-plans-'+idx);
   if (container) {
@@ -1445,13 +1459,13 @@ function saveLeader(e, idx) {
     setTimeout(function(){
       loadLeaders(function(){
         showToast('✓ 「'+r.role+'」を保存しました');
-        if (btn) { btn.textContent = '✦ この役割を保存する'; btn.disabled = false; }
+        if (btn) { btn.textContent = '✦ 保存する'; btn.disabled = false; }
       });
     }, 1500);
   })
   .catch(function(){
     showToast('⚠ 送信に失敗しました。再度お試しください');
-    if (btn) { btn.textContent = '✦ この役割を保存する'; btn.disabled = false; }
+    if (btn) { btn.textContent = '✦ 保存する'; btn.disabled = false; }
   });
 }
 
@@ -1493,7 +1507,7 @@ function applyLeadersData() {
         const item = document.createElement('div');
         item.className = 'lead-plan-item';
         item.innerHTML =
-          '<input type="text" class="lead-plan-month-in" placeholder="○月" value="'+escAttr(pl.month||'')+'" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'
+          '<input type="text" class="lead-plan-month-in" placeholder="" value="'+escAttr(pl.month||'')+'" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'
           +'<textarea class="lead-plan-text-in" placeholder="実施計画を記入" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'+escH(pl.text||'')+'</textarea>'
           +'<button class="lead-plan-del" onclick="removeLeaderPlan(this,'+idx+')">✕</button>';
         container.appendChild(item);
