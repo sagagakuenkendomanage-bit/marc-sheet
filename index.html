@@ -202,6 +202,66 @@
   .bars-anchor-row.selected .bars-anchor-text { color: var(--ink); font-weight: 500; }
   .bars-selected-label { font-size: 11px; color: var(--ink-muted); margin-top: 8px; text-align: right; min-height: 16px; letter-spacing: .04em; }
   .bars-selected-label span { color: var(--gold); font-weight: 700; }
+  /* ===== リーダー配置表 ===== */
+  .leaders-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 16px 20px; margin-bottom: 14px; }
+  .leaders-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .leaders-title { font-size: 13px; font-weight: 700; color: var(--primary); letter-spacing: .04em; }
+  .leaders-save-hint { font-size: 10px; color: var(--ink-muted); }
+  .leaders-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border-soft); border-radius: var(--radius-md); }
+  .leaders-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+  .leaders-table thead tr { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-lt) 100%); }
+  .leaders-table th { padding: 0 12px; height: 42px; text-align: center; font-size: 11px; font-weight: 700; color: #fff; letter-spacing: .04em; border-right: 1px solid rgba(255,255,255,0.15); vertical-align: middle; white-space: nowrap; }
+  .leaders-table th:last-child { border-right: none; }
+  .leaders-table tbody tr.lead-main { border-bottom: 1px solid var(--border-soft); cursor: pointer; transition: background .2s; }
+  .leaders-table tbody tr.lead-main:hover { background: var(--surface-2); }
+  .leaders-table tbody tr.lead-detail { display: none; background: var(--surface-2); }
+  .leaders-table tbody tr.lead-detail.active { display: table-row; }
+  .leaders-table td { padding: 0 12px; height: 52px; font-size: 12px; color: var(--ink-soft); border-right: 1px solid var(--border-soft); vertical-align: middle; }
+  .leaders-table td:last-child { border-right: none; }
+  .lead-cat { background: rgba(26,58,107,0.04); text-align: center; width: 78px; }
+  .lead-cat-icon { width: 22px; height: 22px; display: block; margin: 0 auto 3px; }
+  .lead-cat-icon svg { width: 100%; height: 100%; stroke: var(--primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .lead-cat-num { font-size: 13px; font-weight: 800; color: var(--primary); display: block; line-height: 1.1; }
+  .lead-cat-label { font-size: 11px; font-weight: 700; color: var(--primary); display: block; line-height: 1.2; margin-top: 2px; }
+  .leaders-table tbody tr.lead-main:hover .lead-cat-icon svg { stroke: var(--gold); }
+  .lead-role { text-align: center; font-weight: 700; color: var(--primary); width: 120px; }
+  .lead-persons { width: 150px; }
+  .lead-persons-inner { display: flex; align-items: center; gap: 8px; }
+  .lead-person-tag { display: inline-block; background: var(--gold-pale); color: var(--primary); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .lead-caret { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; transition: transform .25s cubic-bezier(.22,1,.36,1); }
+  .lead-caret svg { width: 16px; height: 16px; stroke: var(--primary); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .leaders-table tbody tr.lead-main.expanded .lead-caret { transform: rotate(180deg); }
+  .lead-plan { cursor: pointer; }
+  .lead-plan-box { padding: 7px 10px; background: var(--gold-pale); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; color: var(--primary); font-weight: 500; font-size: 12px; }
+  .lead-plan-month { font-weight: 700; color: var(--gold); margin-right: 6px; }
+  .lead-plan-empty { color: var(--ink-muted); font-style: italic; }
+  .lead-detail-content { padding: 16px; }
+  .lead-detail-sec { margin-bottom: 18px; }
+  .lead-detail-sec:last-child { margin-bottom: 0; }
+  .lead-detail-title { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: .06em; margin-bottom: 8px; }
+  .lead-person-inputs { display: flex; flex-direction: column; gap: 8px; }
+  .lead-person-row { display: flex; align-items: center; gap: 8px; }
+  .lead-person-label { font-size: 10px; color: var(--ink-muted); font-weight: 600; width: 52px; flex-shrink: 0; }
+  .lead-person-input { flex: 1; padding: 8px 10px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px !important; font-weight: 600; color: var(--primary); }
+  .lead-expect-input { width: 100%; padding: 10px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px !important; min-height: 56px; resize: vertical; color: var(--ink-soft); line-height: 1.6; }
+  .lead-plan-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+  .lead-plan-month-in { width: 58px; flex-shrink: 0; padding: 8px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px !important; text-align: center; font-weight: 600; }
+  .lead-plan-text-in { flex: 1; padding: 8px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px !important; min-height: 52px; resize: vertical; line-height: 1.6; }
+  .lead-plan-del { width: 30px; height: 30px; min-height: 30px; padding: 0; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; color: var(--ink-muted); flex-shrink: 0; margin-top: 6px; transition: all .2s; }
+  .lead-plan-del:hover { border-color: var(--gold); color: var(--gold); }
+  .lead-add-plan { margin-top: 8px; padding: 9px 16px; min-height: 40px; border: 1.5px solid var(--primary); background: rgba(26,58,107,0.04); color: var(--primary); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 12px; font-family: inherit; transition: all .2s; }
+  .lead-add-plan:hover { background: var(--primary); color: #fff; }
+  .lead-save-btn { width: 100%; margin-top: 6px; padding: 12px; background: linear-gradient(135deg, var(--primary), var(--primary-lt)); color: #fff; border: none; border-radius: var(--radius-md); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; letter-spacing: .04em; transition: all .2s; box-shadow: 0 3px 12px rgba(26,58,107,0.25); }
+  .lead-save-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .lead-save-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  @media (max-width: 480px) {
+    .leaders-wrap { padding: 14px 12px; }
+    .leaders-table th { font-size: 10px; padding: 0 8px; }
+    .leaders-table td { padding: 0 8px; font-size: 11px; }
+    .lead-cat { width: 64px; }
+    .lead-role { width: 90px; font-size: 11px; }
+  }
+/* ===LEADERS_CSS_INSERT=== */
 </style>
 </head>
 <body>
@@ -231,6 +291,27 @@
 
   <!-- お知らせタブ -->
   <div class="tab-panel tab-active" id="tab-news">
+    <!-- リーダー配置表 -->
+    <div class="leaders-wrap">
+      <div class="leaders-head">
+        <div class="leaders-title">🏹 リーダー配置表</div>
+        <div class="leaders-save-hint">全員共通・入力すると全員に反映されます</div>
+      </div>
+      <div class="leaders-table-scroll">
+        <table class="leaders-table">
+          <thead>
+            <tr>
+              <th>分類</th>
+              <th>役割</th>
+              <th>担当者</th>
+              <th>最新実施計画</th>
+            </tr>
+          </thead>
+          <tbody id="leaders-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
 
     <!-- カレンダー -->
     <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:16px 20px;margin-bottom:14px;">
@@ -1171,7 +1252,259 @@ document.addEventListener('DOMContentLoaded', () => {
   // 上書きされて振り返りロックがかかる事故を防ぐ。
   renderLogUI();
   loadNews();
+  buildLeadersTable();
+  loadLeaders();
 });
+// ===== リーダー配置表 =====
+const leaderRoles = [
+  { num:'１', label:'方向', role:'キャプテン',        max:2, icon:'<polyline points="12 5 12 19"></polyline><polyline points="5 12 12 5 19 12"></polyline>' },
+  { num:'２', label:'統制', role:'副キャプテン',      max:4, icon:'<path d="M10 17H7a2 2 0 0 0-2 2v2h16v-2a2 2 0 0 0-2-2h-3"></path><path d="M16 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path><circle cx="8" cy="12" r="2.5"></circle><circle cx="16" cy="12" r="2.5"></circle>' },
+  { num:'３', label:'稽古', role:'稽古研究リーダー',  max:3, icon:'<path d="M6 4l6-2 6 2v8c0 3.31-3 6-6 6s-6-2.69-6-6V4z"></path><line x1="12" y1="8" x2="12" y2="16"></line>' },
+  { num:'４', label:'技術', role:'基本動作リーダー',  max:3, icon:'<path d="M12 2v20"></path><path d="M2 12h20"></path><circle cx="12" cy="12" r="8"></circle>' },
+  { num:'５', label:'気勢', role:'気勢リーダー',      max:3, icon:'<path d="M23 7l-7 5 7 5V7z"></path><path d="M1 5h15a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H1a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path>' },
+  { num:'６', label:'身体', role:'基礎体力リーダー',  max:3, icon:'<path d="M6 4h12v1H6zm0 3h12v7H6zm0 9h12v1H6zm2-6v6m4-6v6m4-6v6"></path>' },
+  { num:'７', label:'心理', role:'悩み相談リーダー',  max:3, icon:'<circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line>' },
+  { num:'８', label:'礼儀', role:'品格リーダー',      max:3, icon:'<path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path><path d="M12 13c-5.33 0-8 2.67-8 4v3h16v-3c0-1.33-2.67-4-8-4z"></path>' },
+  { num:'９', label:'発信', role:'広報リーダー',      max:3, icon:'<path d="M4 12a8 8 0 0 1 15.3-3.6"></path><path d="M20 12a8 8 0 0 1-15.3 3.6"></path><path d="M12 2v9m0 0l-3-3m3 3l3-3"></path>' },
+  { num:'１０',label:'学習', role:'学習リーダー',      max:3, icon:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v15H6.5z"></path><line x1="10" y1="6" x2="16" y2="6"></line><line x1="10" y1="10" x2="16" y2="10"></line>' }
+];
+
+// GASから取得したリーダーデータの保管
+let leadersData = {};
+
+function buildLeadersTable() {
+  const tbody = document.getElementById('leaders-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  leaderRoles.forEach(function(r, idx) {
+    // メイン行
+    const main = document.createElement('tr');
+    main.className = 'lead-main';
+    main.onclick = function(){ toggleLeaderDetail(idx); };
+    main.innerHTML =
+      '<td class="lead-cat"><span class="lead-cat-icon"><svg viewBox="0 0 24 24">'+r.icon+'</svg></span>'
+      +'<span class="lead-cat-num">'+r.num+'</span><span class="lead-cat-label">'+r.label+'</span></td>'
+      +'<td class="lead-role">'+r.role+'</td>'
+      +'<td class="lead-persons"><div class="lead-persons-inner"><span class="lead-caret"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>'
+        +'<div class="lead-person-disp" data-idx="'+idx+'"></div></div></td>'
+      +'<td class="lead-plan" onclick="event.stopPropagation();editLeaderPlan('+idx+')"><div class="lead-plan-box" data-idx="'+idx+'"></div></td>';
+    tbody.appendChild(main);
+
+    // 詳細行
+    const detail = document.createElement('tr');
+    detail.className = 'lead-detail';
+    detail.dataset.idx = idx;
+    let personRows = '';
+    for (let i = 0; i < r.max; i++) {
+      personRows += '<div class="lead-person-row"><span class="lead-person-label">担当'+(i+1)+'</span>'
+        +'<input type="text" class="lead-person-input" data-idx="'+idx+'" data-p="'+i+'" placeholder="名前を入力" oninput="updateLeaderDisplay('+idx+')"></div>';
+    }
+    detail.innerHTML =
+      '<td colspan="4"><div class="lead-detail-content">'
+        +'<div class="lead-detail-sec"><div class="lead-detail-title">担当者（最大'+r.max+'名）</div>'
+          +'<div class="lead-person-inputs">'+personRows+'</div></div>'
+        +'<div class="lead-detail-sec"><div class="lead-detail-title">期待役割</div>'
+          +'<textarea class="lead-expect-input" data-idx="'+idx+'" placeholder="期待役割を記入"></textarea></div>'
+        +'<div class="lead-detail-sec"><div class="lead-detail-title">月別実施計画</div>'
+          +'<div class="lead-plans-container" id="lead-plans-'+idx+'"></div>'
+          +'<button class="lead-add-plan" onclick="addLeaderPlan(event,'+idx+')">＋ 月別計画追加</button></div>'
+        +'<button class="lead-save-btn" onclick="saveLeader(event,'+idx+')">✦ この役割を保存する</button>'
+      +'</div></td>';
+    tbody.appendChild(detail);
+  });
+}
+
+function toggleLeaderDetail(idx) {
+  const main = document.querySelectorAll('.leaders-table .lead-main')[idx];
+  const detail = document.querySelector('.leaders-table .lead-detail[data-idx="'+idx+'"]');
+  if (!main || !detail) return;
+  main.classList.toggle('expanded');
+  detail.classList.toggle('active');
+}
+
+function updateLeaderDisplay(idx) {
+  // 担当者表示
+  const inputs = document.querySelectorAll('.lead-person-input[data-idx="'+idx+'"]');
+  const disp = document.querySelector('.lead-person-disp[data-idx="'+idx+'"]');
+  if (disp) {
+    disp.innerHTML = '';
+    inputs.forEach(function(inp){
+      if (inp.value.trim()) {
+        const s = document.createElement('span');
+        s.className = 'lead-person-tag';
+        s.textContent = inp.value.trim();
+        disp.appendChild(s);
+      }
+    });
+  }
+  // 最新実施計画表示
+  const container = document.getElementById('lead-plans-'+idx);
+  const planBox = document.querySelector('.lead-plan-box[data-idx="'+idx+'"]');
+  if (planBox) {
+    let has = false;
+    if (container) {
+      const items = container.querySelectorAll('.lead-plan-item');
+      if (items.length) {
+        const latest = items[items.length-1];
+        const month = latest.querySelector('.lead-plan-month-in').value;
+        const text = latest.querySelector('.lead-plan-text-in').value;
+        if (month || text) {
+          const t = text ? (text.length>30 ? text.slice(0,30)+'…' : text) : '';
+          planBox.innerHTML = '<span class="lead-plan-month">'+escH(month||'未定')+'</span>'+escH(t);
+          has = true;
+        }
+      }
+    }
+    if (!has) planBox.innerHTML = '<span class="lead-plan-empty">計画未設定</span>';
+  }
+}
+
+function addLeaderPlan(e, idx) {
+  if (e) e.stopPropagation();
+  const container = document.getElementById('lead-plans-'+idx);
+  if (!container) return;
+  const item = document.createElement('div');
+  item.className = 'lead-plan-item';
+  item.innerHTML =
+    '<input type="text" class="lead-plan-month-in" placeholder="○月" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'
+    +'<textarea class="lead-plan-text-in" placeholder="実施計画を記入" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')"></textarea>'
+    +'<button class="lead-plan-del" onclick="removeLeaderPlan(this,'+idx+')">✕</button>';
+  container.appendChild(item);
+  updateLeaderDisplay(idx);
+}
+
+function removeLeaderPlan(btn, idx) {
+  btn.parentElement.remove();
+  updateLeaderDisplay(idx);
+}
+
+function editLeaderPlan(idx) {
+  const main = document.querySelectorAll('.leaders-table .lead-main')[idx];
+  const detail = document.querySelector('.leaders-table .lead-detail[data-idx="'+idx+'"]');
+  if (main && detail && !main.classList.contains('expanded')) {
+    main.classList.add('expanded');
+    detail.classList.add('active');
+  }
+  const container = document.getElementById('lead-plans-'+idx);
+  if (container) {
+    const items = container.querySelectorAll('.lead-plan-item');
+    if (items.length) {
+      const ta = items[items.length-1].querySelector('.lead-plan-text-in');
+      setTimeout(function(){ ta.focus(); }, 250);
+    } else {
+      addLeaderPlan(null, idx);
+      setTimeout(function(){
+        const ta = container.querySelector('.lead-plan-text-in');
+        if (ta) ta.focus();
+      }, 100);
+    }
+  }
+}
+
+function collectLeader(idx) {
+  const persons = [];
+  document.querySelectorAll('.lead-person-input[data-idx="'+idx+'"]').forEach(function(inp){
+    if (inp.value.trim()) persons.push(inp.value.trim());
+  });
+  const expect = document.querySelector('.lead-expect-input[data-idx="'+idx+'"]');
+  const plans = [];
+  const container = document.getElementById('lead-plans-'+idx);
+  if (container) {
+    container.querySelectorAll('.lead-plan-item').forEach(function(item){
+      const month = item.querySelector('.lead-plan-month-in').value.trim();
+      const text = item.querySelector('.lead-plan-text-in').value.trim();
+      if (month || text) plans.push({ month: month, text: text });
+    });
+  }
+  return { persons: persons, expect: (expect ? expect.value.trim() : ''), plans: plans };
+}
+
+function saveLeader(e, idx) {
+  if (e) e.stopPropagation();
+  const r = leaderRoles[idx];
+  const d = collectLeader(idx);
+  const btn = e ? e.target : null;
+  if (btn) { btn.textContent = '送信中…'; btn.disabled = true; }
+  const data = {
+    記録種別: 'リーダー配置',
+    分類番号: r.num,
+    分類: r.label,
+    役割: r.role,
+    担当者: d.persons.join('・'),
+    期待役割: d.expect,
+    月別実施計画: JSON.stringify(d.plans)
+  };
+  const payload = Object.assign({}, data, { _token: WRITE_TOKEN });
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(){
+    // 保存後にサーバから再取得して全員反映を確認
+    setTimeout(function(){
+      loadLeaders(function(){
+        showToast('✓ 「'+r.role+'」を保存しました');
+        if (btn) { btn.textContent = '✦ この役割を保存する'; btn.disabled = false; }
+      });
+    }, 1500);
+  })
+  .catch(function(){
+    showToast('⚠ 送信に失敗しました。再度お試しください');
+    if (btn) { btn.textContent = '✦ この役割を保存する'; btn.disabled = false; }
+  });
+}
+
+function loadLeaders(cb) {
+  fetch(GAS_URL + '?action=getLeaders', { method: 'GET' })
+  .then(function(r){ return r.json(); })
+  .then(function(json){
+    if (json.status === 'ok') {
+      leadersData = {};
+      (json.leaders || []).forEach(function(row){
+        const key = String(row['役割']||row.role||'').trim();
+        if (key) leadersData[key] = row;
+      });
+      applyLeadersData();
+    }
+    if (cb) cb();
+  })
+  .catch(function(){ if (cb) cb(); });
+}
+
+function applyLeadersData() {
+  leaderRoles.forEach(function(r, idx){
+    const row = leadersData[r.role];
+    if (!row) { updateLeaderDisplay(idx); return; }
+    // 担当者を復元
+    const persons = String(row['担当者']||row.persons||'').split(/[・,、]+/).filter(function(x){return x.trim();});
+    const inputs = document.querySelectorAll('.lead-person-input[data-idx="'+idx+'"]');
+    persons.forEach(function(p, i){ if (inputs[i]) inputs[i].value = p.trim(); });
+    // 期待役割を復元
+    const expect = document.querySelector('.lead-expect-input[data-idx="'+idx+'"]');
+    if (expect) expect.value = row['期待役割']||row.expect||'';
+    // 月別計画を復元
+    const container = document.getElementById('lead-plans-'+idx);
+    if (container) {
+      container.innerHTML = '';
+      let plans = [];
+      try { plans = JSON.parse(row['月別実施計画']||row.plans||'[]'); } catch(e) { plans = []; }
+      plans.forEach(function(pl){
+        const item = document.createElement('div');
+        item.className = 'lead-plan-item';
+        item.innerHTML =
+          '<input type="text" class="lead-plan-month-in" placeholder="○月" value="'+escAttr(pl.month||'')+'" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'
+          +'<textarea class="lead-plan-text-in" placeholder="実施計画を記入" data-idx="'+idx+'" oninput="updateLeaderDisplay('+idx+')">'+escH(pl.text||'')+'</textarea>'
+          +'<button class="lead-plan-del" onclick="removeLeaderPlan(this,'+idx+')">✕</button>';
+        container.appendChild(item);
+      });
+    }
+    updateLeaderDisplay(idx);
+  });
+}
+
+function escAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+/* ===LEADERS_JS_INSERT=== */
 </script>
 </body>
 </html>
