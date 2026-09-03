@@ -206,6 +206,7 @@
   .diary-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 18px 20px; margin-bottom: 14px; }
   .diary-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
   .diary-title { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: .04em; }
+  .diary-date { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--ink-muted); background: var(--bg-warm); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
   .diary-sub { font-size: 11px; color: var(--ink-muted); margin-bottom: 16px; }
   .diary-name-row { margin-bottom: 18px; }
   .diary-name-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; margin-bottom: 6px; display: block; }
@@ -335,6 +336,7 @@
       <div class="diary-head">
         <span style="font-size:16px;">📔</span>
         <span class="diary-title">剣道日記</span>
+        <span class="diary-date" id="diary-date"></span>
       </div>
       <div class="diary-sub">今日の稽古をふりかえって記録しよう</div>
 
@@ -1389,6 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderLogUI();
   loadNews();
   loadDiaryName();
+  setDiaryDate();
   buildLeadersTable();
   loadLeaders();
 });
@@ -1434,6 +1437,17 @@ function onDiaryNameInput(el) {
 }
 
 // 起動時：キャッシュ→GASの順で名前を復元（二重）
+// 今日の日付をタイトル横に表示（例：9/3(水)）
+function setDiaryDate() {
+  const el = document.getElementById('diary-date');
+  if (!el) return;
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const dow = ['日','月','火','水','木','金','土'][now.getDay()];
+  el.textContent = m + '/' + d + '(' + dow + ')';
+}
+
 function loadDiaryName() {
   const nameEl = document.getElementById('diary-name');
   if (!nameEl) return;
