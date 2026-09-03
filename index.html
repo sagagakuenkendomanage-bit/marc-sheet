@@ -323,7 +323,7 @@
   </div>
 
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('news', this)">📣 お知らせ</button>
+    <button class="tab-btn active" onclick="switchTab('news', this)">📣 セルフマネジメント</button>
     <button class="tab-btn" onclick="switchTab('profile', this)">👤 自己理解（現在地）</button>
     <button class="tab-btn" onclick="switchTab('log', this)">⚔ 稽古ログ（目的地）</button>
   </div>
@@ -334,13 +334,13 @@
     <div class="diary-wrap">
       <div class="diary-head">
         <span style="font-size:16px;">📔</span>
-        <span class="diary-title">高校生剣道部「成長日誌」</span>
+        <span class="diary-title">剣道日記</span>
       </div>
       <div class="diary-sub">今日の稽古をふりかえって記録しよう</div>
 
       <div class="diary-name-row">
         <label class="diary-name-label">名前<span style="color:var(--red);margin-left:2px;">*</span></label>
-        <input type="text" id="diary-name" class="diary-name-input" placeholder="山田 一郎" oninput="onDiaryNameInput(this)">
+        <input type="text" id="diary-name" class="diary-name-input" placeholder="名前を入力" oninput="onDiaryNameInput(this)">
       </div>
 
       <!-- Q1 -->
@@ -423,7 +423,7 @@
         <textarea id="diary-free" class="diary-free" placeholder="自由に記入"></textarea>
       </div>
 
-      <button class="diary-submit-btn" id="diary-submit-btn" onclick="submitDiary()">✦ 今日の日誌を提出する</button>
+      <button class="diary-submit-btn" id="diary-submit-btn" onclick="submitDiary()">✦ 提出する</button>
     </div>
 
     <!-- リーダー配置表 -->
@@ -1498,12 +1498,12 @@ function submitDiary() {
   .then(function(){
     // 名前キャッシュは維持。名前以外をクリアして次の入力に備える。
     resetDiaryForm();
-    showToast('✓ 今日の日誌を提出しました！');
-    btn.textContent = '✦ 今日の日誌を提出する'; btn.disabled = false;
+    showToast('✓ 提出しました！');
+    btn.textContent = '✦ 提出する'; btn.disabled = false;
   })
   .catch(function(){
     showToast('⚠ 送信に失敗しました。再度お試しください');
-    btn.textContent = '✦ 今日の日誌を提出する'; btn.disabled = false;
+    btn.textContent = '✦ 提出する'; btn.disabled = false;
   });
 }
 
