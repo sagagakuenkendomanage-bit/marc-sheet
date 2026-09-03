@@ -202,6 +202,41 @@
   .bars-anchor-row.selected .bars-anchor-text { color: var(--ink); font-weight: 500; }
   .bars-selected-label { font-size: 11px; color: var(--ink-muted); margin-top: 8px; text-align: right; min-height: 16px; letter-spacing: .04em; }
   .bars-selected-label span { color: var(--gold); font-weight: 700; }
+  /* ===== 剣道日記（成長日誌） ===== */
+  .diary-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 18px 20px; margin-bottom: 14px; }
+  .diary-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .diary-title { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: .04em; }
+  .diary-sub { font-size: 11px; color: var(--ink-muted); margin-bottom: 16px; }
+  .diary-name-row { margin-bottom: 18px; }
+  .diary-name-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; margin-bottom: 6px; display: block; }
+  .diary-name-input { width: 100%; padding: 11px 14px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px !important; color: var(--ink); }
+  .diary-name-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,107,0.08); outline: none; }
+  .diary-q { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--border-soft); }
+  .diary-q:last-of-type { border-bottom: none; }
+  .diary-q-label { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; line-height: 1.5; }
+  .diary-q-hint { font-size: 11px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 10px; }
+  .diary-q-hint .anchor { display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; }
+  /* 5段階スケール */
+  .diary-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .diary-scale-btn { padding: 12px 4px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--ink-soft); font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
+  .diary-scale-btn:active { transform: scale(.96); }
+  .diary-scale-btn.selected { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,58,107,0.25); }
+  .diary-scale-ends { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--ink-muted); }
+  /* チェックボックス群 */
+  .diary-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .diary-check-btn { padding: 9px 14px; border: 1.5px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--ink-soft); font-size: 13px; font-family: inherit; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; font-weight: 500; }
+  .diary-check-btn:active { transform: scale(.97); }
+  .diary-check-btn.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 700; box-shadow: 0 2px 8px rgba(26,58,107,0.2); }
+  .diary-other-input { width: 100%; margin-top: 10px; padding: 10px 12px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px !important; display: none; }
+  .diary-other-input.show { display: block; }
+  .diary-other-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,107,0.08); outline: none; }
+  /* 自由記述 */
+  .diary-free { width: 100%; padding: 11px 14px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px !important; min-height: 72px; resize: vertical; line-height: 1.7; }
+  .diary-free:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,107,0.08); outline: none; }
+  /* 提出ボタン */
+  .diary-submit-btn { width: 100%; margin-top: 6px; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-lt)); color: #fff; border: none; border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 700; letter-spacing: .04em; cursor: pointer; transition: all .2s; box-shadow: 0 3px 12px rgba(26,58,107,0.25); }
+  .diary-submit-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .diary-submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
   /* ===== リーダー配置表 ===== */
   .leaders-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 16px 20px; margin-bottom: 14px; }
   .leaders-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -295,6 +330,102 @@
 
   <!-- お知らせタブ -->
   <div class="tab-panel tab-active" id="tab-news">
+    <!-- 剣道日記（成長日誌） -->
+    <div class="diary-wrap">
+      <div class="diary-head">
+        <span style="font-size:16px;">📔</span>
+        <span class="diary-title">高校生剣道部「成長日誌」</span>
+      </div>
+      <div class="diary-sub">今日の稽古をふりかえって記録しよう</div>
+
+      <div class="diary-name-row">
+        <label class="diary-name-label">名前<span style="color:var(--red);margin-left:2px;">*</span></label>
+        <input type="text" id="diary-name" class="diary-name-input" placeholder="山田 一郎" oninput="onDiaryNameInput(this)">
+      </div>
+
+      <!-- Q1 -->
+      <div class="diary-q">
+        <div class="diary-q-label">Q1　今日のコンディションは？</div>
+        <div class="diary-q-hint">体調・疲れ・気分などを含めた、今日の自分の状態</div>
+        <div class="diary-scale" data-q="q1">
+          <button class="diary-scale-btn" data-v="1" onclick="diaryScale(this,'q1')">1</button>
+          <button class="diary-scale-btn" data-v="2" onclick="diaryScale(this,'q1')">2</button>
+          <button class="diary-scale-btn" data-v="3" onclick="diaryScale(this,'q1')">3</button>
+          <button class="diary-scale-btn" data-v="4" onclick="diaryScale(this,'q1')">4</button>
+          <button class="diary-scale-btn" data-v="5" onclick="diaryScale(this,'q1')">5</button>
+        </div>
+        <div class="diary-scale-ends"><span>1＝かなり悪い</span><span>3＝普通</span><span>5＝かなり良い</span></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="diary-q">
+        <div class="diary-q-label">Q2　今日の稽古の負荷は？</div>
+        <div class="diary-q-hint">「実際の稽古量」ではなく、自分が感じた稽古のきつさ</div>
+        <div class="diary-scale" data-q="q2">
+          <button class="diary-scale-btn" data-v="1" onclick="diaryScale(this,'q2')">1</button>
+          <button class="diary-scale-btn" data-v="2" onclick="diaryScale(this,'q2')">2</button>
+          <button class="diary-scale-btn" data-v="3" onclick="diaryScale(this,'q2')">3</button>
+          <button class="diary-scale-btn" data-v="4" onclick="diaryScale(this,'q2')">4</button>
+          <button class="diary-scale-btn" data-v="5" onclick="diaryScale(this,'q2')">5</button>
+        </div>
+        <div class="diary-scale-ends"><span>1＝とても楽</span><span>3＝普通</span><span>5＝とてもきつい</span></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="diary-q">
+        <div class="diary-q-label">Q3　今日の稽古は充実していた？</div>
+        <div class="diary-scale" data-q="q3">
+          <button class="diary-scale-btn" data-v="1" onclick="diaryScale(this,'q3')">1</button>
+          <button class="diary-scale-btn" data-v="2" onclick="diaryScale(this,'q3')">2</button>
+          <button class="diary-scale-btn" data-v="3" onclick="diaryScale(this,'q3')">3</button>
+          <button class="diary-scale-btn" data-v="4" onclick="diaryScale(this,'q3')">4</button>
+          <button class="diary-scale-btn" data-v="5" onclick="diaryScale(this,'q3')">5</button>
+        </div>
+        <div class="diary-scale-ends"><span>1＝まったく充実せず</span><span>3＝普通</span><span>5＝とても充実</span></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="diary-q">
+        <div class="diary-q-label">Q4　今日、特に意識したことは？</div>
+        <div class="diary-q-hint">複数選択可</div>
+        <div class="diary-checks" data-q="q4">
+          <button class="diary-check-btn" onclick="diaryCheck(this)">足・身体の使い方</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">構え・姿勢</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">打突</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">タイミング・拍子</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">間合い</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">攻め</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">相手への対応</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">技・技の選択</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">気持ち・集中</button>
+          <button class="diary-check-btn" onclick="diaryCheckOther(this)">その他</button>
+        </div>
+        <input type="text" id="diary-q4-other" class="diary-other-input" placeholder="その他の内容を入力">
+      </div>
+
+      <!-- Q5 -->
+      <div class="diary-q">
+        <div class="diary-q-label">Q5　今日、意識したことについて、どんな変化があった？</div>
+        <div class="diary-q-hint">複数選択可</div>
+        <div class="diary-checks" data-q="q5">
+          <button class="diary-check-btn" onclick="diaryCheck(this)">うまくできた</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">少しうまくできた</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">うまくできなかった</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">新しいことを試した</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">気づいたことがあった</button>
+          <button class="diary-check-btn" onclick="diaryCheck(this)">特に変化なし</button>
+        </div>
+      </div>
+
+      <!-- 自由記述 -->
+      <div class="diary-q">
+        <div class="diary-q-label">＋ 今日、残しておきたいことがあれば一言</div>
+        <textarea id="diary-free" class="diary-free" placeholder="自由に記入"></textarea>
+      </div>
+
+      <button class="diary-submit-btn" id="diary-submit-btn" onclick="submitDiary()">✦ 今日の日誌を提出する</button>
+    </div>
+
     <!-- リーダー配置表 -->
     <div class="leaders-wrap">
       <div class="leaders-head">
@@ -1257,9 +1388,136 @@ document.addEventListener('DOMContentLoaded', () => {
   // 上書きされて振り返りロックがかかる事故を防ぐ。
   renderLogUI();
   loadNews();
+  loadDiaryName();
   buildLeadersTable();
   loadLeaders();
 });
+// ===== 剣道日記（成長日誌） =====
+// 名前は既存の marc_user_name キャッシュを共有し、GASからも照合する。
+const diaryState = { q1:0, q2:0, q3:0 };
+
+// スケール（Q1〜Q3）選択
+function diaryScale(btn, q) {
+  const group = document.querySelector('.diary-scale[data-q="'+q+'"]');
+  group.querySelectorAll('.diary-scale-btn').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  diaryState[q] = parseInt(btn.dataset.v);
+}
+
+// チェックボックス（Q4/Q5）トグル
+function diaryCheck(btn) {
+  btn.classList.toggle('selected');
+}
+
+// Q4「その他」トグル（テキスト欄の表示切替も）
+function diaryCheckOther(btn) {
+  btn.classList.toggle('selected');
+  const other = document.getElementById('diary-q4-other');
+  if (btn.classList.contains('selected')) {
+    other.classList.add('show');
+    setTimeout(function(){ other.focus(); }, 100);
+  } else {
+    other.classList.remove('show');
+    other.value = '';
+  }
+}
+
+// 名前入力：キャッシュに保存（既存の氏名キャッシュと共有）
+function onDiaryNameInput(el) {
+  const v = el.value.trim();
+  const vNorm = v.replace(/[\u3000\s]+/g, '');
+  if (typeof LS !== 'undefined') LS.set(LS_NAME, vNorm);
+  if (typeof marc !== 'undefined') marc.name = vNorm;
+  // 自己理解タブの氏名欄・記録者表示も同期
+  const ni = document.getElementById('nameInput'); if (ni && !ni.value) ni.value = v;
+  const lu = document.getElementById('logUserName'); if (lu && vNorm) { lu.textContent = vNorm; lu.style.color = 'var(--primary)'; }
+}
+
+// 起動時：キャッシュ→GASの順で名前を復元（二重）
+function loadDiaryName() {
+  const nameEl = document.getElementById('diary-name');
+  if (!nameEl) return;
+  // ① まずキャッシュから即時復元
+  const cached = (typeof LS !== 'undefined') ? (LS.get(LS_NAME) || '') : '';
+  if (cached) nameEl.value = cached;
+  // ② GASからも照合（自己理解データに氏名があれば、それを正とする）
+  if (cached && cached.length >= 2) {
+    fetch(GAS_URL + '?' + new URLSearchParams({ name: cached }).toString(), { method: 'GET' })
+    .then(function(res){ return res.text(); })
+    .then(function(text){
+      try {
+        const json = JSON.parse(text);
+        if (json.status === 'ok' && json.data && json.data['氏名']) {
+          // GAS側に氏名がある場合はそれで上書き（表記ゆれ対策）
+          if (!nameEl.value.trim()) nameEl.value = json.data['氏名'];
+        }
+      } catch(e) {}
+    })
+    .catch(function(){});
+  }
+}
+
+// 提出
+function submitDiary() {
+  const nameEl = document.getElementById('diary-name');
+  const name = (nameEl.value || '').trim();
+  if (!name) { showToast('⚠ 名前を入力してください'); nameEl.focus(); return; }
+
+  // Q4/Q5の選択を収集
+  const q4 = Array.from(document.querySelectorAll('.diary-checks[data-q="q4"] .diary-check-btn.selected'))
+    .map(function(b){ return b.textContent.trim(); });
+  const q4other = (document.getElementById('diary-q4-other').value || '').trim();
+  // 「その他」が選択されていて自由入力がある場合、その他→入力値に置換
+  const q4list = q4.map(function(x){ return x === 'その他' && q4other ? 'その他:' + q4other : x; });
+  const q5 = Array.from(document.querySelectorAll('.diary-checks[data-q="q5"] .diary-check-btn.selected'))
+    .map(function(b){ return b.textContent.trim(); });
+  const free = (document.getElementById('diary-free').value || '').trim();
+
+  const btn = document.getElementById('diary-submit-btn');
+  btn.textContent = '送信中…'; btn.disabled = true;
+
+  const data = {
+    記録種別: '剣道日記',
+    氏名: name,
+    記録日: todayJST(),
+    Q1コンディション: diaryState.q1 || '',
+    Q2負荷: diaryState.q2 || '',
+    Q3充実度: diaryState.q3 || '',
+    Q4意識したこと: q4list.join('・'),
+    Q5変化: q5.join('・'),
+    一言: free,
+    timestamp: new Date().toLocaleString('ja-JP')
+  };
+  const payload = Object.assign({}, data, { _token: WRITE_TOKEN });
+
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(){
+    // 名前キャッシュは維持。名前以外をクリアして次の入力に備える。
+    resetDiaryForm();
+    showToast('✓ 今日の日誌を提出しました！');
+    btn.textContent = '✦ 今日の日誌を提出する'; btn.disabled = false;
+  })
+  .catch(function(){
+    showToast('⚠ 送信に失敗しました。再度お試しください');
+    btn.textContent = '✦ 今日の日誌を提出する'; btn.disabled = false;
+  });
+}
+
+// 名前以外をクリア
+function resetDiaryForm() {
+  diaryState.q1 = 0; diaryState.q2 = 0; diaryState.q3 = 0;
+  document.querySelectorAll('.diary-scale-btn.selected').forEach(function(b){ b.classList.remove('selected'); });
+  document.querySelectorAll('.diary-check-btn.selected').forEach(function(b){ b.classList.remove('selected'); });
+  const other = document.getElementById('diary-q4-other');
+  if (other) { other.value = ''; other.classList.remove('show'); }
+  const free = document.getElementById('diary-free');
+  if (free) free.value = '';
+}
+
 // ===== リーダー配置表 =====
 const leaderRoles = [
   { num:'１', label:'方向', role:'キャプテン',        max:2, icon:'<polyline points="12 5 12 19"></polyline><polyline points="5 12 12 5 19 12"></polyline>' },
