@@ -202,6 +202,15 @@
   .bars-anchor-row.selected .bars-anchor-text { color: var(--ink); font-weight: 500; }
   .bars-selected-label { font-size: 11px; color: var(--ink-muted); margin-top: 8px; text-align: right; min-height: 16px; letter-spacing: .04em; }
   .bars-selected-label span { color: var(--gold); font-weight: 700; }
+  /* ===== 専用AI（NotebookLM）リンク ===== */
+  .ai-link { display: flex; align-items: center; gap: 13px; background: linear-gradient(120deg, #1a3a6b 0%, #2a5298 60%, #34608f 100%); color: #fff; border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 14px; text-decoration: none; box-shadow: 0 4px 18px rgba(26,58,107,0.28), 0 0 0 1px rgba(212,173,26,0.35) inset; transition: all .25s ease; }
+  .ai-link:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,58,107,0.35), 0 0 0 1px rgba(212,173,26,0.55) inset; }
+  .ai-link:hover { filter: brightness(1.06); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .ai-link-icon { font-size: 24px; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(212,173,26,0.8)); }
+  .ai-link-body { flex: 1; }
+  .ai-link-title { font-size: 15px; font-weight: 700; letter-spacing: .04em; }
+  .ai-link-sub { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 2px; }
+  .ai-link-arrow { font-size: 20px; color: rgba(255,255,255,0.75); flex-shrink: 0; }
   /* ===== 剣道日記（成長日誌） ===== */
   .diary-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 18px 20px; margin-bottom: 14px; }
   .diary-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -331,6 +340,16 @@
 
   <!-- お知らせタブ -->
   <div class="tab-panel tab-active" id="tab-news">
+    <!-- 専用AI（NotebookLM）リンク -->
+    <a href="https://notebooklm.google.com/" target="_blank" class="ai-link">
+      <span class="ai-link-icon">✨</span>
+      <div class="ai-link-body">
+        <div class="ai-link-title">専用AIに相談する</div>
+        <div class="ai-link-sub">NotebookLM｜稽古や課題について質問できます</div>
+      </div>
+      <span class="ai-link-arrow">›</span>
+    </a>
+
     <!-- 剣道日記（成長日誌） -->
     <div class="diary-wrap">
       <div class="diary-head">
