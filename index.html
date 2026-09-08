@@ -1451,9 +1451,6 @@ function onDiaryNameInput(el) {
   const vNorm = v.replace(/[\u3000\s]+/g, '');
   if (typeof LS !== 'undefined') LS.set(LS_NAME, vNorm);
   if (typeof marc !== 'undefined') marc.name = vNorm;
-  // 自己理解タブの氏名欄・記録者表示も同期
-  const ni = document.getElementById('nameInput'); if (ni && !ni.value) ni.value = v;
-  const lu = document.getElementById('logUserName'); if (lu && vNorm) { lu.textContent = vNorm; lu.style.color = 'var(--primary)'; }
 }
 
 // 起動時：キャッシュ→GASの順で名前を復元（二重）
