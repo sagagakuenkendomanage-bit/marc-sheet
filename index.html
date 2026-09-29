@@ -142,6 +142,8 @@
   .tab-btn { flex: 1; padding: 12px 6px; border: none; border-radius: var(--radius-lg); background: transparent; font-family: 'Noto Sans JP', sans-serif; font-size: 12px; font-weight: 700; color: var(--ink-muted); cursor: pointer; transition: all 0.22s cubic-bezier(.22,1,.36,1); letter-spacing: .02em; display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 44px; -webkit-tap-highlight-color: transparent; white-space: nowrap; }
   .tab-btn.active { background: var(--primary); color: #fff; box-shadow: 0 2px 10px rgba(26,58,107,0.25); }
   .tab-btn:not(.active):hover { background: var(--bg-warm); color: var(--ink-soft); }
+  .tab-bar { flex-wrap: wrap; }
+  .ai-link.ai-link-intab { flex: 1 1 100%; margin: 0; padding: 11px 16px; }
   .tab-panel { display: none; }
   .tab-panel.tab-active { display: block; }
 
@@ -213,11 +215,24 @@
   .ai-link-arrow { font-size: 20px; color: rgba(255,255,255,0.75); flex-shrink: 0; }
   /* ===== 剣道日記（成長日誌） ===== */
   .diary-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 18px 20px; margin-bottom: 14px; }
-  .diary-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .diary-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .diary-title { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: .04em; }
   .diary-date { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--ink-muted); background: var(--bg-warm); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-  .diary-sub { font-size: 11px; color: var(--ink-muted); margin-bottom: 16px; }
   .diary-name-row { margin-bottom: 18px; }
+  .diary-name-inline { display: flex; gap: 8px; }
+  .diary-name-inline .diary-name-input { flex: 1; min-width: 0; }
+  .diary-name-ok { flex-shrink: 0; padding: 0 16px; border: none; border-radius: var(--radius-sm); background: var(--primary); color: #fff; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; }
+  .diary-who { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 14px; padding: 6px 12px; background: var(--bg-warm); border-radius: var(--radius-sm); }
+  .diary-who-label { font-size: 11px; font-weight: 700; color: var(--ink-muted); letter-spacing: .06em; }
+  .diary-who-name { font-size: 14px; font-weight: 700; color: var(--ink); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @keyframes hkAlertIn { from { opacity: 0; transform: translateY(-6px) scale(.97); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .my-notice.is-new { animation: none; } .my-notice.shine::after { display: none; } }
+  .hk-cm-form { display: flex; gap: 6px; margin-top: 7px; }
+  .hk-cm-form input { flex: 1; min-width: 0; padding: 8px 10px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px !important; font-family: inherit; color: var(--ink); }
+  .hk-cm-form input:focus { border-color: var(--primary); outline: none; }
+  .hk-cm-send { flex-shrink: 0; min-height: 40px !important; padding: 0 14px; border: none; border-radius: var(--radius-sm); background: var(--primary); color: #fff; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; }
+  .hk-cm-count { font-size: 10px; color: var(--ink-muted); text-align: right; margin-top: 3px; }
+  .diary-who-edit { flex-shrink: 0; min-height: 32px !important; padding: 0 12px; border: 1.5px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--ink-soft); font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; }
   .diary-name-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; margin-bottom: 6px; display: block; }
   .diary-name-input { width: 100%; padding: 11px 14px !important; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px !important; color: var(--ink); }
   .diary-name-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,58,107,0.08); outline: none; }
@@ -310,6 +325,80 @@
     .lead-cat { width: 64px; }
     .lead-role { width: 90px; font-size: 11px; }
   }
+  /* ===== 日記を書く／仲間の一言 の切り替え ===== */
+  .diary-seg { scroll-margin-top: 170px; display: flex; gap: 4px; padding: 4px; margin: 0 0 16px; background: var(--bg-warm); border: 1px solid var(--border-soft); border-radius: 999px; }
+  .diary-seg button { flex: 1; min-height: 44px !important; border: none; border-radius: 999px; background: transparent; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--ink-soft); display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .diary-seg button.on { background: var(--primary); color: #fff; box-shadow: 0 2px 10px rgba(26,58,107,0.25); }
+  .seg-badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #e0393e; color: #fff; font-size: 11px; line-height: 18px; }
+  .diary-seg button { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 1px; line-height: 1.2; white-space: nowrap; }
+  .seg-main { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .seg-names { max-width: 100%; padding: 0 6px; font-size: 10px; font-weight: 600; color: var(--primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .diary-pane { display: none; }
+  /* 「仲間の一言」表示中は、自己管理タブ内の剣道日記より下（リーダー配置表・カレンダー等）を隠す */
+  #tab-news.peers-mode > .diary-wrap ~ * { display: none !important; }
+  .diary-pane.on { display: block; }
+  .diary-done { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 14px; border-radius: var(--radius-sm); background: rgba(26,58,107,0.06); font-size: 13px; font-weight: 700; color: var(--primary); }
+  .diary-done button { margin-left: auto; min-height: 36px !important; padding: 0 12px; border: 1.5px solid var(--primary); border-radius: 999px; background: var(--surface); color: var(--primary); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+  /* ===== 仲間の一言 ===== */
+  .hk-wrap { border: 1.5px solid rgba(26,58,107,0.18); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); }
+  .hk-head { display: flex; align-items: center; gap: 6px; padding: 9px 14px; background: rgba(26,58,107,0.06); }
+  .hk-head-title { font-size: 13px; font-weight: 700; color: var(--primary); letter-spacing: .04em; }
+  .hk-head-sub { margin-left: auto; font-size: 10px; color: var(--ink-muted); text-align: right; }
+  .hk-head-title { white-space: nowrap; flex-shrink: 0; }
+  .hk-nudge { padding: 8px 14px 0; font-size: 11px; color: var(--ink-soft); line-height: 1.6; }
+  .hk-nudge span { white-space: nowrap; }
+  .hk-list { padding: 2px 14px; }
+  .hk-item { padding: 7px 0 8px; border-bottom: 1px solid var(--border-soft); }
+  .hk-item:last-child { border-bottom: none; }
+  .hk-item.mine { background: var(--gold-pale); margin: 0 -14px; padding: 7px 14px 8px; }
+  .hk-meta { font-size: 11px; color: var(--ink-muted); display: flex; align-items: center; gap: 6px; min-height: 28px; }
+  .hk-meta-who { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hk-date { color: var(--primary); font-weight: 700; margin-right: 8px; }
+  .hk-name { font-weight: 600; color: var(--ink-soft); }
+  .hk-text { font-size: 13px; color: var(--ink); line-height: 1.6; margin-top: 1px; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+  .hk-text.open { display: block; }
+  .hk-rx { display: flex; gap: 4px; flex-shrink: 0; }
+  .hk-chip { min-height: 26px !important; height: 26px; padding: 0 8px; border: 1.5px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--ink-soft); font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; position: relative; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .hk-chip::after { content: ''; position: absolute; top: -7px; bottom: -7px; left: 0; right: 0; }
+  .hk-chip.on { border-color: var(--primary); background: rgba(26,58,107,0.08); color: var(--primary); }
+  .hk-chip.hk-count { border: none; background: transparent; padding: 0 5px; gap: 3px; color: var(--ink-soft); }
+  .hk-chip.hk-count.on { background: transparent; color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+  .hk-chip.hk-add { width: 30px; padding: 0; justify-content: center; color: var(--ink-muted); font-size: 14px; }
+  .hk-names { font-size: 11px; color: var(--ink-soft); background: var(--bg-warm); border-radius: 6px; padding: 6px 10px; margin-top: 7px; line-height: 1.6; }
+  .hk-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .hk-empty { font-size: 12px; color: var(--ink-muted); padding: 12px 0; text-align: center; }
+
+  /* ===== ヘッダーを低く（Q1を最初の画面に入れるため）===== */
+  body { padding-top: 12px; }
+  .header { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: center; text-align: left; padding: 16px 18px 14px; margin-bottom: 12px; }
+  .header-kamon { grid-row: 1 / 4; width: 44px; height: 44px; margin: 0; }
+  .header-en { font-size: 9px; letter-spacing: 0.3em; margin-bottom: 2px; }
+  .header-title { font-size: 20px !important; margin-bottom: 2px; }
+  .header-subtitle { margin-bottom: 0; }
+  .tab-bar { margin-bottom: 12px; top: 8px; }
+
+  .my-notice-wrap { margin: 0 0 16px; }
+  .my-notice-body { padding: 8px 12px 10px; border: 1.5px solid var(--border-soft); border-top: none; border-radius: 0 0 var(--radius-sm) var(--radius-sm); background: var(--surface); }
+  .my-notice-label { font-size: 11px; font-weight: 700; color: var(--ink-muted); letter-spacing: .06em; }
+  .my-notice-body .my-text { margin: 2px 0 8px; }
+  .my-notice-body .my-rx { margin: 0; }
+  .my-notice.open { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+  .my-notice.is-new + .my-notice-body { border-color: var(--gold); }
+  .my-notice { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 40px !important; margin: 0; padding: 8px 12px; border: 1.5px solid var(--border-soft); border-radius: var(--radius-sm); background: var(--surface); color: var(--primary); font-family: inherit; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; }
+  .my-notice.is-new { border-color: var(--gold); background: var(--gold-pale); color: #8a6200; animation: hkAlertIn .45s cubic-bezier(.22,1.4,.36,1) both; }
+  /* 新着の光：開いて最初に表示したときだけ、光の帯が2回横切って止まる（CSSのみ・枠の外にははみ出さない） */
+  .my-notice { position: relative; overflow: hidden; }
+  .my-notice.shine::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 45%; pointer-events: none; background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.75) 50%, rgba(255,255,255,0) 100%); transform: translateX(-120%); animation: myShine .9s ease-in-out .5s 2 both; }
+  @keyframes myShine { from { transform: translateX(-120%); } to { transform: translateX(260%); } }
+  .my-notice .go { margin-left: auto; padding-left: 6px; white-space: nowrap; flex-shrink: 0; }
+  .my-cheer { display: inline-block; font-size: 13px; animation: myCheer 1s ease .3s 2; }
+  @keyframes myCheer { 0%,100% { transform: rotate(0) scale(1); } 30% { transform: rotate(-15deg) scale(1.2); } 60% { transform: rotate(10deg) scale(1.1); } }
+  @media (prefers-reduced-motion: reduce) { .my-cheer { animation: none; } }
+  .my-text { font-size: 13px; color: var(--ink); line-height: 1.6; margin-top: 2px; word-break: break-word; }
+  .my-rx { margin: 8px -6px 0; padding: 7px 10px; border-radius: var(--radius-sm); background: rgba(26,58,107,0.06); font-size: 12px; color: var(--ink-soft); line-height: 1.7; }
+  .my-lbl { color: var(--ink-muted); }
+  .my-new { color: var(--ink); }
+
 /* ===LEADERS_CSS_INSERT=== */
 </style>
 </head>
@@ -328,20 +417,14 @@
     <div class="header-en">KENDO CLUB — MARC SHEET</div>
     <h1 class="header-title">剣道部 <span>MARC</span>シート</h1>
     <div class="header-subtitle">思考とAIの架け橋</div>
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-label" id="progressLabel">記入率 0%</div>
   </div>
 
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('news', this)">📣 自己管理</button>
     <button class="tab-btn" onclick="switchTab('profile', this)">👤 自己理解</button>
     <button class="tab-btn" onclick="switchTab('log', this)">⚔ 稽古ログ</button>
-  </div>
-
-  <!-- お知らせタブ -->
-  <div class="tab-panel tab-active" id="tab-news">
-    <!-- 専用AI（NotebookLM）リンク -->
-    <a href="https://notebooklm.google.com/" target="_blank" class="ai-link">
+    <!-- 専用AI（NotebookLM）：タブと同じ列に配置。押すと別タブでNotebookLMを開く -->
+    <a href="https://notebooklm.google.com/" target="_blank" rel="noopener" class="ai-link ai-link-intab">
       <span class="ai-link-icon">✨</span>
       <div class="ai-link-body">
         <div class="ai-link-title">専用AIに相談する</div>
@@ -349,19 +432,44 @@
       </div>
       <span class="ai-link-arrow">›</span>
     </a>
+  </div>
 
+  <!-- お知らせタブ -->
+  <div class="tab-panel tab-active" id="tab-news">
     <!-- 剣道日記（成長日誌） -->
     <div class="diary-wrap">
+      <!-- 記入者：保存済みなら表示のみ、未保存・変更時だけ入力欄 -->
+      <div class="diary-who" id="diary-who" style="display:none;">
+        <span class="diary-who-label">記入者</span>
+        <span class="diary-who-name" id="diary-who-name"></span>
+        <button type="button" class="diary-who-edit" onclick="editDiaryName()">変更</button>
+      </div>
+      <div class="diary-name-row" id="diary-name-row">
+        <label class="diary-name-label" for="diary-name">名前<span style="color:var(--red);margin-left:2px;">*</span></label>
+        <div class="diary-name-inline">
+          <input type="text" id="diary-name" class="diary-name-input" placeholder="名前を入力" oninput="onDiaryNameInput(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();confirmDiaryName();}">
+          <button type="button" class="diary-name-ok" onclick="confirmDiaryName()">決定</button>
+        </div>
+      </div>
+
+      <!-- 切り替え：日記を書く／仲間の一言（開いたときは常に「日記を書く」） -->
+      <div class="diary-seg" role="tablist">
+        <button type="button" class="on" id="seg-write" role="tab" aria-selected="true" onclick="hkSwitchPane('write')">✍ 日記を書く</button>
+        <button type="button" id="seg-peers" role="tab" aria-selected="false" onclick="hkSwitchPane('peers')"><span class="seg-main">💬 仲間の一言<span class="seg-badge" id="seg-badge" style="display:none;"></span></span><span class="seg-names" id="seg-names" style="display:none;"></span></button>
+      </div>
+
+      <!-- ===== 日記を書く ===== -->
+      <div class="diary-pane on" id="pane-write" role="tabpanel">
       <div class="diary-head">
         <span style="font-size:16px;">📔</span>
         <span class="diary-title">剣道日記</span>
         <span class="diary-date" id="diary-date"></span>
       </div>
-      <div class="diary-sub">今日の稽古をふりかえって記録しよう</div>
 
-      <div class="diary-name-row">
-        <label class="diary-name-label">名前<span style="color:var(--red);margin-left:2px;">*</span></label>
-        <input type="text" id="diary-name" class="diary-name-input" placeholder="名前を入力" oninput="onDiaryNameInput(this)">
+      <!-- 前回の一言に届いた反応（1行。「見る」を押すと前回の一言と反応が開く） -->
+      <div class="my-notice-wrap" id="my-notice-wrap" style="display:none;">
+        <button type="button" class="my-notice" id="my-notice" onclick="hkToggleNotice()"></button>
+        <div class="my-notice-body" id="my-notice-body" style="display:none;"></div>
       </div>
 
       <!-- Q1 -->
@@ -442,10 +550,31 @@
       <!-- 自由記述 -->
       <div class="diary-q">
         <div class="diary-q-label">＋ 今日、残しておきたいことがあれば一言</div>
-        <textarea id="diary-free" class="diary-free" placeholder="自由に記入"></textarea>
+        <div class="diary-q-hint">書いた一言は、名前付きで部員全員に公開されます（仲間の一言に表示）</div>
+        <textarea id="diary-free" class="diary-free" placeholder="自由に記入（部員全員に公開されます）"></textarea>
       </div>
 
       <button class="diary-submit-btn" id="diary-submit-btn" onclick="submitDiary()">✦ 提出する</button>
+
+      <!-- 提出後の完了表示（画面は自動で切り替えない） -->
+      <div class="diary-done" id="diary-done" style="display:none;">
+        <span>✓ 提出しました</span>
+        <button type="button" onclick="hkSwitchPane('peers')">💬 仲間の一言を見る ›</button>
+      </div>
+      </div>
+
+      <!-- ===== 仲間の一言 ===== -->
+      <div class="diary-pane" id="pane-peers" role="tabpanel">
+      <div class="hk-wrap">
+        <div class="hk-head">
+          <span style="font-size:14px;">💬</span>
+          <span class="hk-head-title">仲間の一言</span>
+          <span class="hk-head-sub">各自の最新・新しい順（自分以外）</span>
+        </div>
+        <div class="hk-nudge" id="hk-nudge" style="display:none;">仲間の一言にも、<span>いいねやコメントを送ってみよう</span></div>
+        <div class="hk-list" id="hk-list"><div class="hk-empty">読み込み中…</div></div>
+      </div>
+      </div>
     </div>
 
     <!-- リーダー配置表 -->
@@ -470,60 +599,6 @@
       <div id="leaders-detail-area"></div>
     </div>
 
-
-    <!-- カレンダー -->
-    <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:16px 20px;margin-bottom:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <div style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.04em;">📅 お知らせ・予定</div>
-        <button onclick="toggleCalAdd()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">＋ 予定を追加</button>
-      </div>
-
-      <!-- 予定リスト（GASから動的取得） -->
-      <div id="cal-events" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
-        <div style="font-size:12px;color:var(--ink-muted);">読み込み中…</div>
-      </div>
-
-      <!-- カレンダーを開くリンク（小さく） -->
-      <a href="https://calendar.google.com/calendar/r?cid=f73c9138556948d4566156c4b995a372a35d0bb1e51b2f5c6e2b3342a25e0531%40group.calendar.google.com" target="_blank" style="font-size:11px;color:var(--ink-muted);text-decoration:none;display:flex;align-items:center;gap:4px;margin-bottom:12px;">
-        <span style="font-size:12px;">📅</span> カレンダーを開く
-      </a>
-
-      <!-- 区切り線 -->
-      <div style="border-top:1px solid var(--border-soft);margin-bottom:12px;"></div>
-
-      <!-- 予定追加フォーム（トグル） -->
-      <div id="cal-add-form" style="display:none;border-top:1px solid var(--border-soft);padding-top:14px;margin-top:4px;">
-        <div style="font-size:11px;font-weight:700;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:8px;">新しい予定</div>
-        <input type="text" id="cal-title" placeholder="予定のタイトル" style="width:100%;margin-bottom:8px;">
-        <div style="display:flex;gap:8px;margin-bottom:10px;">
-          <input type="date" id="cal-date" style="flex:1;">
-          <input type="time" id="cal-time" style="flex:1;">
-        </div>
-        <button onclick="addToCalendar()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">Googleカレンダーに追加</button>
-      </div>
-    </div>
-
-    <!-- ミーティング議題 -->
-    <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:16px 20px;margin-bottom:14px;">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.04em;margin-bottom:12px;">📋 ミーティング議題</div>
-      <div style="border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:12px 14px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <div style="background:var(--primary);color:#fff;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0;">次回</div>
-          <div class="meeting-date-label" style="font-size:13px;color:var(--ink);font-weight:600;">—</div>
-        </div>
-        <div id="meeting-agenda" style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;">
-          <div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">議題</div>
-          <div style="font-size:12px;color:var(--ink-muted);line-height:1.8;">読み込み中…</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- チーム編成 -->
-    <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:16px 20px;margin-bottom:14px;">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.04em;margin-bottom:12px;">👥 チーム編成</div>
-      <div id="team-list">
-      </div>
-    </div>
 
     <!-- 公式YouTubeチャンネル -->
     <a href="https://www.youtube.com/playlist?list=PLesVF4lcDQjY" target="_blank" style="display:flex;align-items:center;gap:14px;background:#FF0000;color:#fff;border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px;text-decoration:none;box-shadow:var(--shadow-sm);">
@@ -666,11 +741,18 @@
           <label class="field-label" style="margin-bottom:5px;">稽古日<span class="required">*</span></label>
           <div style="font-size:10px;color:var(--ink-muted);margin-bottom:4px;">稽古を行った当日の日付を入力してください</div>
           <input type="hidden" id="logDate" value="">
-          <div id="logDateDisplay" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="openDatePicker()">
-            <span id="logDateText">今日の日付を選択</span>
-            <span style="font-size:12px;color:var(--ink-muted);">📅</span>
+          <!-- ★モバイル(iOS/Android)では、JSからinput.showPicker()やinput.click()を
+               呼び出す方式だと反応しないことがある（PCのChromeでは動くがスマホでは
+               無視されるブラウザの仕様差）。そのため、見えないネイティブのinput自体を
+               見た目のボックスにぴったり重ねて配置し、タップが直接inputに当たる
+               ようにする（OSレベルのタップなので確実に動く）。 -->
+          <div style="position:relative;">
+            <div id="logDateDisplay" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+              <span id="logDateText">今日の日付を選択</span>
+              <span style="font-size:12px;color:var(--ink-muted);">📅</span>
+            </div>
+            <input type="date" id="logDateNative" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="onNativeDateChange(this.value)" onclick="this.value=document.getElementById('logDate').value||todayJST();">
           </div>
-          <input type="date" id="logDateNative" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;" onchange="onNativeDateChange(this.value)">
         </div>
         <div style="flex-shrink:0;text-align:right;">
           <div style="font-size:10px;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:2px;">記録者</div>
@@ -854,8 +936,11 @@ function updateProgress() {
   let filled = 0;
   required.forEach(el => { if (el.value.trim()) filled++; });
   const pct = Math.round((filled / required.length) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = '記入率 ' + pct + '%';
+  // 記入率バーはヘッダーから削除済み（要素がなければ何もしない）
+  const pf = document.getElementById('progressFill');
+  const pl = document.getElementById('progressLabel');
+  if (pf) pf.style.width = pct + '%';
+  if (pl) pl.textContent = '記入率 ' + pct + '%';
 }
 
 let _toastTimer = null;
@@ -878,35 +963,47 @@ function sendToGAS(data, callback) {
     const type = data['記録種別'] || '';
     const name = data['氏名'] || marc.name || '';
     if (!name) { callback(true); return; }
-    setTimeout(function() {
-      const params = new URLSearchParams({ name: name });
-      if (marc.grade) params.set('grade', marc.grade);
-      if (marc.kumi)  params.set('kumi',  marc.kumi);
-      fetch(GAS_URL + '?' + params.toString(), { method: 'GET' })
-      .then(function(res) { return res.text(); })
-      .then(function(text) {
-        try {
-          const json = JSON.parse(text);
-          if (json.status !== 'ok') { callback(false); return; }
-          if (type === 'チャレンジ宣言') {
-            const date = String(data['稽古日'] || '').slice(0,10);
-            const found = (json.declares || []).some(function(r) {
-              return String(r['稽古日']||r.date||'').replace(/\//g,'-').slice(0,10) === date;
-            });
-            callback(found);
-          } else if (type === '稽古ログ') {
-            const date = String(data['稽古日']||data['date']||'').slice(0,10);
-            const found = (json.logs || []).some(function(r) {
-              return String(r.date||r['稽古日']||'').replace(/\//g,'-').slice(0,10) === date;
-            });
-            callback(found);
-          } else {
-            callback(!!(json.data && json.data['氏名']));
-          }
-        } catch(e) { callback(true); }
-      })
-      .catch(function() { callback(true); });
-    }, 2000);
+    // ★ダッシュボード側GASにLockServiceを追加したため（同時書き込み対策）、
+    //   混雑時は書き込みが数秒キュー待ちになることがある。
+    //   固定2秒の1回チェックでは「実際は成功しているのに失敗と誤判定する」
+    //   ケースが増えるため、間隔を空けて最大4回（合計約13秒）リトライする。
+    const delays = [2000, 3000, 4000, 4000]; // 2s, 5s, 9s, 13s（累積）
+    verifyWrite(0);
+    function verifyWrite(attempt) {
+      setTimeout(function() {
+        const params = new URLSearchParams({ name: name });
+        if (marc.grade) params.set('grade', marc.grade);
+        if (marc.kumi)  params.set('kumi',  marc.kumi);
+        fetch(GAS_URL + '?' + params.toString(), { method: 'GET' })
+        .then(function(res) { return res.text(); })
+        .then(function(text) {
+          try {
+            const json = JSON.parse(text);
+            if (json.status !== 'ok') { retryOrGiveUp(attempt); return; }
+            let found = false;
+            if (type === 'チャレンジ宣言') {
+              const date = String(data['稽古日'] || '').slice(0,10);
+              found = (json.declares || []).some(function(r) {
+                return String(r['稽古日']||r.date||'').replace(/\//g,'-').slice(0,10) === date;
+              });
+            } else if (type === '稽古ログ') {
+              const date = String(data['稽古日']||data['date']||'').slice(0,10);
+              found = (json.logs || []).some(function(r) {
+                return String(r.date||r['稽古日']||'').replace(/\//g,'-').slice(0,10) === date;
+              });
+            } else {
+              found = !!(json.data && json.data['氏名']);
+            }
+            if (found) { callback(true); } else { retryOrGiveUp(attempt); }
+          } catch(e) { retryOrGiveUp(attempt); }
+        })
+        .catch(function() { retryOrGiveUp(attempt); });
+      }, delays[attempt]);
+    }
+    function retryOrGiveUp(attempt) {
+      if (attempt + 1 < delays.length) { verifyWrite(attempt + 1); }
+      else { callback(false); }
+    }
   })
   .catch(function(err) { console.error('GAS送信エラー:', err); callback(false); });
 }
@@ -989,15 +1086,15 @@ function collectFormData() {
   const barsVals = getBarsValues();
   const wazas = Array.from(document.querySelectorAll('#wazaSelector .rank-btn.active')).map(b => b.textContent.trim()).join('・');
   return Object.assign({
-    氏名: (document.getElementById('nameInput')?.value||'').trim(),
-    学年: document.getElementById('gakuNenSelect')?.value||'',
-    組: document.getElementById('kumiInput')?.value||'',
-    段位級: document.getElementById('dankyuSelect')?.value||'',
-    剣道歴: document.getElementById('kendoReki')?.value||'',
-    利き手構え: document.getElementById('kikiteSelect')?.value||'',
+    氏名: ((document.getElementById('nameInput')||{}).value||'').trim(),
+    学年: (document.getElementById('gakuNenSelect')||{}).value||'',
+    組: (document.getElementById('kumiInput')||{}).value||'',
+    段位級: (document.getElementById('dankyuSelect')||{}).value||'',
+    剣道歴: (document.getElementById('kendoReki')||{}).value||'',
+    利き手構え: (document.getElementById('kikiteSelect')||{}).value||'',
     得意技: wazas,
-    今の課題感: document.getElementById('kadaikan')?.value||'',
-    個人目標: document.getElementById('kojinMokuhyo')?.value||'',
+    今の課題感: (document.getElementById('kadaikan')||{}).value||'',
+    個人目標: (document.getElementById('kojinMokuhyo')||{}).value||'',
     記録日時: new Date().toLocaleString('ja-JP'),
     記録種別: '自己理解',
   }, barsVals);
@@ -1009,11 +1106,24 @@ function makeLocalKey(name, grade, kumi) {
   return 'marc_profile_' + name + (g ? '_' + g : '') + (k ? '_' + k : '');
 }
 
+// ★以前はトーストのみで警告していたが、初めて使う生徒は小さい警告に気づかず
+//   「ボタンを押しても何も起きない」と感じてしまうケースがあった。
+//   該当欄を赤枠でハイライト＋自動スクロールして見逃しにくくする（全送信フォーム共通）。
+function highlightMissing(el) {
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.style.borderColor = 'var(--red, #dc2626)';
+  el.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.15)';
+  setTimeout(function() { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2500);
+}
+
 function submitForm(type) {
-  const name    = (document.getElementById('nameInput')?.value||'').trim();
-  const gakunen = document.getElementById('gakuNenSelect')?.value||'';
-  if (!name)    { showToast('⚠ 氏名を入力してください'); return; }
-  if (!gakunen) { showToast('⚠ 学年を選択してください'); return; }
+  const nameEl = document.getElementById('nameInput');
+  const gakunenEl = document.getElementById('gakuNenSelect');
+  const name    = ((nameEl||{}).value||'').trim();
+  const gakunen = (gakunenEl||{}).value||'';
+  if (!name)    { showToast('⚠ 氏名を入力してください'); highlightMissing(nameEl); return; }
+  if (!gakunen) { showToast('⚠ 学年を選択してください'); highlightMissing(gakunenEl); return; }
   const btn = document.querySelector('.submit-btn');
   if (btn) { btn.textContent = '送信中…'; btn.disabled = true; }
   const data = collectFormData();
@@ -1025,7 +1135,7 @@ function submitForm(type) {
 }
 
 function tempSave() {
-  const name = (document.getElementById('nameInput')?.value||'').trim();
+  const name = ((document.getElementById('nameInput')||{}).value||'').trim();
   if (!name) { showToast('⚠ 氏名を入力してから保存してください'); return; }
   const data = collectFormData();
   const lsKey = makeLocalKey(name, data['学年'], data['組']);
@@ -1059,7 +1169,7 @@ function onLogDateChange() { renderLogUI(); }
 function renderDateDots(currentDate) {
   const container = document.getElementById('dateDotList');
   if (!container) return;
-  const cur = currentDate || (document.getElementById('logDate')?.value||'').slice(0,10);
+  const cur = currentDate || ((document.getElementById('logDate')||{}).value||'').slice(0,10);
   const pending = Object.keys(marc.declares).filter(d => !marc.logs[d]).sort().reverse();
   const done    = Object.keys(marc.logs).sort().reverse();
   if (!pending.length && !done.length) { container.innerHTML = ''; return; }
@@ -1143,11 +1253,11 @@ window.selectFulfillment = function(v) {
 };
 
 function submitPreLog() {
-  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
-  const name=marc.name,intent=(document.getElementById('logIntent')?.value||'').trim(),date=(document.getElementById('logDate')?.value||'').slice(0,10);
+  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||marc.grade; marc.kumi=(document.getElementById('kumiInput')||{}).value||marc.kumi;
+  const name=marc.name,intentEl=document.getElementById('logIntent'),intent=((intentEl||{}).value||'').trim(),dateEl=document.getElementById('logDate'),date=((dateEl||{}).value||'').slice(0,10);
   if (!name)   { showToast('⚠ 先に「自己理解」タブで氏名を入力してください'); return; }
-  if (!date)   { showToast('⚠ 稽古日を入力してください'); return; }
-  if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); return; }
+  if (!date)   { showToast('⚠ 稽古日を入力してください'); highlightMissing(document.getElementById('logDateDisplay')); return; }
+  if (!intent) { showToast('⚠ チャレンジ内容を入力してください'); highlightMissing(intentEl); return; }
   const btn=document.getElementById('preSubmitBtn');
   if (btn) { btn.textContent='送信中…'; btn.disabled=true; }
   const data={記録種別:'チャレンジ宣言',氏名:name,学年:marc.grade,組:marc.kumi,稽古日:date,試したいこと:intent,intent:intent,timestamp:new Date().toLocaleString('ja-JP')};
@@ -1159,15 +1269,15 @@ function submitPreLog() {
 }
 
 function submitLog() {
-  marc.grade=document.getElementById('gakuNenSelect')?.value||marc.grade; marc.kumi=document.getElementById('kumiInput')?.value||marc.kumi;
-  const name=marc.name,date=(document.getElementById('logDate')?.value||'').slice(0,10);
-  const scene=(document.getElementById('logScene')?.value||'').trim(),why=(document.getElementById('logWhy')?.value||'').trim(),next=(document.getElementById('logNext')?.value||'').trim();
+  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||marc.grade; marc.kumi=(document.getElementById('kumiInput')||{}).value||marc.kumi;
+  const name=marc.name,date=((document.getElementById('logDate')||{}).value||'').slice(0,10);
+  const scene=((document.getElementById('logScene')||{}).value||'').trim(),why=((document.getElementById('logWhy')||{}).value||'').trim(),next=((document.getElementById('logNext')||{}).value||'').trim();
   const decl=marc.declares[date]||{},intent=decl.intent||'';
   if (!name)           { showToast('⚠ 氏名が設定されていません'); return; }
-  if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); return; }
-  if (!scene)          { showToast('⚠ ①の結果を入力してください'); return; }
-  if (!why)            { showToast('⚠ ②の原因分析を入力してください'); return; }
-  if (!next)           { showToast('⚠ ③の次への一手を入力してください'); return; }
+  if (!fulfillmentVal) { showToast('⚠ 達成感を選んでください'); highlightMissing(document.getElementById('fulfillmentGrid')); return; }
+  if (!scene)          { showToast('⚠ ①の結果を入力してください'); highlightMissing(document.getElementById('logScene')); return; }
+  if (!why)            { showToast('⚠ ②の原因分析を入力してください'); highlightMissing(document.getElementById('logWhy')); return; }
+  if (!next)           { showToast('⚠ ③の次への一手を入力してください'); highlightMissing(document.getElementById('logNext')); return; }
   const btn=document.querySelector('.post-submit-btn');
   if (btn) { btn.textContent='送信中…'; btn.disabled=true; }
   const data={記録種別:'稽古ログ',氏名:name,学年:marc.grade,組:marc.kumi,稽古日:date,date:date,name:name,intent:intent,試したいこと:intent,scene:scene,why:why,next:next,fulfillment:fulfillmentVal+'/5',timestamp:new Date().toLocaleString('ja-JP')};
@@ -1205,12 +1315,18 @@ function renderHistory() {
 
 function updateLogCount() { const el=document.getElementById('logCount'); if(el) el.textContent=Object.keys(marc.logs).length+' 件'; }
 
-function generatePrint() { showToast('⏳ GASで一覧表を生成します。'); setTimeout(()=>{window.open(GAS_URL+'?action=generatePrint','_blank');},500); }
+function generatePrint() {
+  // ★GAS側doGet()には action==='generatePrint' に対応する処理が存在せず、
+  //   実行すると「MARCプログラム ダッシュボード GAS v6 — OK」という
+  //   無意味なページが開くだけだった（一覧表は生成されない）。
+  //   未実装であることを正直に伝える。
+  showToast('⚠ この機能は現在準備中です。担当の先生にお問い合わせください');
+}
 
 function _switchTabLegacy(tab, el) {
     const nameEl=document.getElementById('nameInput');
     if(nameEl&&nameEl.value.trim()){
-      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
+      marc.name=nameEl.value.trim().replace(/[　\s]+/g,''); marc.grade=(document.getElementById('gakuNenSelect')||{}).value||''; marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
       LS.set(LS_NAME,marc.name);
       const logName=document.getElementById('logUserName'); if(logName){logName.textContent=marc.name;logName.style.color='var(--primary)';}
     }
@@ -1223,7 +1339,7 @@ function onNameInput(el) {
   clearTimeout(window._nameTimer);
   if(vNorm.length>=2){
     window._nameTimer=setTimeout(function(){
-      marc.grade=document.getElementById('gakuNenSelect')?.value||''; marc.kumi=document.getElementById('kumiInput')?.value||'';
+      marc.grade=(document.getElementById('gakuNenSelect')||{}).value||''; marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
       const currentId=marc._fetchId;
       fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
     },1000);
@@ -1231,8 +1347,8 @@ function onNameInput(el) {
 }
 
 function onGradeKumiChange(){
-  marc.grade=document.getElementById('gakuNenSelect')?.value||'';
-  marc.kumi=document.getElementById('kumiInput')?.value||'';
+  marc.grade=(document.getElementById('gakuNenSelect')||{}).value||'';
+  marc.kumi=(document.getElementById('kumiInput')||{}).value||'';
   if(!marc.name || marc.name.length<2) return;
   marc._fetchId++;
   clearTimeout(window._gradeTimer);
@@ -1240,11 +1356,6 @@ function onGradeKumiChange(){
     const currentId=marc._fetchId;
     fetchUserData(marc.name,marc.grade,marc.kumi,currentId);
   },800);
-}
-
-function openDatePicker() {
-  const native=document.getElementById('logDateNative');
-  if(native){ native.value=document.getElementById('logDate').value||todayJST(); if(native.showPicker){native.showPicker();}else{native.click();} }
 }
 
 function onNativeDateChange(val) {
@@ -1263,137 +1374,46 @@ function switchTab(tab, el) {
 }
 
 // ===== お知らせタブ =====
-const CAL_ID = 'f73c9138556948d4566156c4b995a372a35d0bb1e51b2f5c6e2b3342a25e0531@group.calendar.google.com';
 
 function loadNews() {
-  fetch(GAS_URL + '?action=getNews', { method: 'GET' })
+  fetch(GAS_URL + '?action=getNews&lite=1', { method: 'GET' }) // 予定・議題・チーム編成は使わないので軽量版
   .then(function(r){ return r.json(); })
   .then(function(data){
     if(data.status === 'ok'){
-      renderCalendarEvents(data.calendar || []);
-      renderAgenda(data.agenda || null);
-      window._allDeclares = data.declares || {};
-      renderTeams(data.teams || []);
+      hkDisplayNames = data.displayNames || {};
+      renderHitokoto(data.hitokoto || []);
     }
   })
   .catch(function(){ /* ネットワーク失敗時は静的表示のまま */ });
 }
 
-function renderCalendarEvents(events) {
-  const el = document.getElementById('cal-events');
-  if(!el) return;
-  if(!events.length){
-    el.innerHTML = '<div style="font-size:12px;color:var(--ink-muted);padding:4px 0;">今後30日間の予定はありません</div>';
-    return;
-  }
-  el.innerHTML = events.map(function(ev){
-    const isToday = ev.today;
-    const bg  = isToday ? 'var(--primary)' : '#E6F5F0';
-    const col = isToday ? '#fff' : 'var(--primary)';
-    const txtCol = isToday ? 'var(--ink)' : 'var(--ink-soft)';
-    const timeStr = ev.time ? ' ' + ev.time : '';
-    return '<div style="display:flex;align-items:center;gap:10px;">' +
-      '<div style="background:'+bg+';color:'+col+';border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;min-width:44px;text-align:center;">' + escH(ev.date||'') + '</div>' +
-      '<div style="font-size:13px;color:'+txtCol+';">' + escH(ev.title + timeStr) + '</div>' +
-    '</div>';
-  }).join('');
-}
-
-function renderAgenda(agenda) {
-  if(!agenda || !agenda.date) return;
-  const d = new Date(agenda.date + 'T00:00:00');
-  const DOW = ['日','月','火','水','木','金','土'];
-  const dateLabel = (d.getMonth()+1) + '月' + d.getDate() + '日（' + DOW[d.getDay()] + '）';
-  const timeLabel = agenda.start && agenda.end ? ' ' + agenda.start + '〜' + agenda.end : '';
-  const dateEl = document.querySelector('#tab-news .meeting-date-label');
-  if(dateEl) dateEl.textContent = dateLabel + timeLabel;
-  const agendaEl = document.getElementById('meeting-agenda');
-  if(agendaEl){
-    agendaEl.innerHTML =
-      '<div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">議題</div>' +
-      '<div style="font-size:12px;color:var(--ink);line-height:1.8;">' + escH(agenda.text || '—') + '</div>';
-  }
-}
-
-function loadCalendarEvents() { /* renderCalendarEventsに移行 */ }
-
-function openCalendarAdd() {
-  toggleCalAdd();
-}
-
-function toggleCalAdd(){
-  const form = document.getElementById('cal-add-form');
-  if(form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
-}
-
-function addToCalendar() {
-  const title = document.getElementById('cal-title')?.value.trim();
-  const date  = document.getElementById('cal-date')?.value;
-  const time  = document.getElementById('cal-time')?.value;
-  if (!title || !date) { showToast('⚠ タイトルと日付を入力してください'); return; }
-  const d = date.replace(/-/g, '');
-  const startHH = time ? time.split(':')[0] : '09';
-  const startMM = time ? time.split(':')[1] : '00';
-  const endHH   = time ? String(parseInt(startHH)+1).padStart(2,'0') : '10';
-  const start = d + 'T' + startHH + startMM + '00';
-  const end   = d + 'T' + endHH + startMM + '00';
-  const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + start + '/' + end + '&cid=' + encodeURIComponent(CAL_ID);
-  window.open(url, '_blank');
-  document.getElementById('cal-add-form').style.display = 'none';
-  showToast('✓ Googleカレンダーで確認してください');
-}
-
-function renderTeams(teams) {
-  const el = document.getElementById('team-list');
-  if(!el) return;
-  if(!teams.length){
-    el.innerHTML = '<div style="font-size:12px;color:var(--ink-muted);text-align:center;padding:16px 0;">チーム編成はまだ設定されていません</div>';
-    return;
-  }
-  el.innerHTML = teams.map(function(t){
-    const members = t.members || [];
-    const leader = t.leader || members[0] || '';
-    const sub    = t.sub    || members[1] || '';
-    const memberStr = members.join('・');
-    const declaresHtml = members.map(function(m){
-      const mNorm = m.replace(/[　\s]+/g, '');
-      const declData = (window._allDeclares || {})[mNorm] || null;
-      const text = declData ? (declData.intent || '') : null;
-      return '<div style="display:flex;gap:10px;align-items:flex-start;">' +
-        '<span style="font-size:11px;font-weight:700;color:var(--ink-muted);min-width:36px;flex-shrink:0;">' + escH(m) + '</span>' +
-        (text !== null
-          ? '<span style="font-size:12px;color:var(--ink);line-height:1.5;">' + (text ? escH(text) : '<span style="color:var(--ink-muted);font-style:italic;">未入力</span>') + '</span>'
-          : '<span style="font-size:12px;color:var(--ink-muted);">—</span>') +
-      '</div>';
-    }).join('');
-    return '<div class="team-card" style="border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px;">' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
-        '<div style="font-size:14px;font-weight:700;color:var(--ink);">' + escH(t.name) + '</div>' +
-        '<div style="display:flex;gap:6px;">' +
-          (leader ? '<span style="background:#E6F5F0;color:#0F6E56;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">リーダー：' + escH(leader) + '</span>' : '') +
-          (sub    ? '<span style="background:#EEF2FF;color:#3730A3;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;">サブリーダー：' + escH(sub) + '</span>' : '') +
-        '</div>' +
-      '</div>' +
-      '<div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px;">' + escH(memberStr) + '</div>' +
-      '<div style="background:var(--bg-warm);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:8px;">' +
-        '<div style="font-size:10px;font-weight:700;color:var(--primary);margin-bottom:2px;letter-spacing:.06em;">稽古テーマ</div>' +
-        '<div style="font-size:12px;color:' + (t.theme ? 'var(--ink)' : 'var(--ink-muted)') + ';' + (t.theme ? '' : 'font-style:italic;') + '">' + escH(t.theme || '自由に稽古テーマを設定してください') + '</div>' +
-      '</div>' +
-      (t.criteria ? '<div style="background:#f5f7fa;border-left:3px solid #888;border-radius:0 6px 6px 0;padding:7px 10px;margin-bottom:10px;">' +
-        '<div style="font-size:10px;font-weight:700;color:#666;margin-bottom:2px;letter-spacing:.06em;">選出基準</div>' +
-        '<div style="font-size:12px;color:var(--ink);line-height:1.6;">' + escH(t.criteria) + '</div>' +
-      '</div>' : '') +
-      '<div style="border-top:1px solid var(--border-soft);padding-top:10px;">' +
-        '<div style="font-size:10px;font-weight:700;color:var(--ink-muted);letter-spacing:.06em;margin-bottom:8px;">🎯 チャレンジ宣言</div>' +
-        '<div style="display:flex;flex-direction:column;gap:6px;">' + declaresHtml + '</div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-function loadTeams() { /* renderTeamsに移行 */ }
-
 function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ★何度か「ボタンを押しても何も起きない」という報告があったが、リモートでの
+//   原因特定が難しいため、JSエラーが発生した場合に画面上のトーストで
+//   見えるようにする（次回同じ現象が起きた時、エラー内容を確認できるように）。
+// ただし、ブラウザの拡張機能（MetaMask など）が出したエラーはこのページとは無関係なので表示しない。
+function isForeignError(msg, where) {
+  const s = String(msg || '') + ' ' + String(where || '');
+  return /(chrome|moz|safari(-web)?|ms-browser)-extension:\/\//i.test(s)
+      || /MetaMask|ethereum|web3|wallet|Could not establish connection|message port closed|Extension context/i.test(s);
+}
+window.addEventListener('error', function(e) {
+  try {
+    // 他のサイトや拡張機能のスクリプトで起きたエラーは無視（このページのファイル以外）
+    if (e.filename && e.filename.indexOf(location.origin) !== 0 && location.protocol !== 'file:') return;
+    if (isForeignError(e.message, (e.error && e.error.stack) || e.filename)) return;
+    showToast('⚠ エラーが発生しました：' + (e.message || '不明') + '（画面のスクショを先生に送ってください）');
+  } catch(_) {}
+});
+window.addEventListener('unhandledrejection', function(e) {
+  try {
+    const r = e.reason;
+    const msg = (r && r.message) || r || '不明';
+    if (isForeignError(msg, r && r.stack)) return;
+    showToast('⚠ 通信エラーが発生しました：' + msg + '（画面のスクショを先生に送ってください）');
+  } catch(_) {}
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   marc.name=''; marc.grade=''; marc.kumi='';
@@ -1411,6 +1431,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderLogUI();
   loadNews();
   loadDiaryName();
+  q4LoadCustom();
   setDiaryDate();
   buildLeadersTable();
   loadLeaders();
@@ -1453,6 +1474,42 @@ function onDiaryNameInput(el) {
   if (typeof marc !== 'undefined') marc.name = vNorm;
 }
 
+// ===== 記入者表示 =====
+// 名前が保存済み → 「記入者：〇〇　変更」の表示のみ。未保存・変更中 → 入力欄を出す。
+let _diaryNameEditing = false;
+function refreshDiaryWho() {
+  const nameEl = document.getElementById('diary-name');
+  const who = document.getElementById('diary-who');
+  const row = document.getElementById('diary-name-row');
+  if (!nameEl || !who || !row) return;
+  const v = (nameEl.value || '').trim();
+  if (v && !_diaryNameEditing) {
+    document.getElementById('diary-who-name').textContent = v;
+    who.style.display = 'flex';
+    row.style.display = 'none';
+  } else {
+    who.style.display = 'none';
+    row.style.display = 'block';
+  }
+  if (typeof drawHitokoto === 'function') drawHitokoto(); // 自分の行の色を名前に合わせて更新
+}
+function editDiaryName() {
+  _diaryNameEditing = true;
+  refreshDiaryWho();
+  const el = document.getElementById('diary-name');
+  if (el) { el.focus(); el.select(); }
+}
+function confirmDiaryName() {
+  const el = document.getElementById('diary-name');
+  if (!el || !el.value.trim()) { showToast('⚠ 名前を入力してください'); if (el) el.focus(); return; }
+  onDiaryNameInput(el);
+  _diaryNameEditing = false;
+  if (typeof hkNoticeOpen !== 'undefined') { hkJustSeen = null; hkNoticeOpen = false; }
+  refreshDiaryWho();
+  if (typeof hkLoadMyComments === 'function') hkLoadMyComments();
+  if (typeof q4LoadCustom === 'function') q4LoadCustom();
+}
+
 // 起動時：キャッシュ→GASの順で名前を復元（二重）
 // 今日の日付をタイトル横に表示（例：9/3(水)）
 function setDiaryDate() {
@@ -1471,6 +1528,7 @@ function loadDiaryName() {
   // ① まずキャッシュから即時復元
   const cached = (typeof LS !== 'undefined') ? (LS.get(LS_NAME) || '') : '';
   if (cached) nameEl.value = cached;
+  refreshDiaryWho();
   // ② GASからも照合（自己理解データに氏名があれば、それを正とする）
   if (cached && cached.length >= 2) {
     fetch(GAS_URL + '?' + new URLSearchParams({ name: cached }).toString(), { method: 'GET' })
@@ -1480,7 +1538,7 @@ function loadDiaryName() {
         const json = JSON.parse(text);
         if (json.status === 'ok' && json.data && json.data['氏名']) {
           // GAS側に氏名がある場合はそれで上書き（表記ゆれ対策）
-          if (!nameEl.value.trim()) nameEl.value = json.data['氏名'];
+          if (!nameEl.value.trim()) { nameEl.value = json.data['氏名']; refreshDiaryWho(); }
         }
       } catch(e) {}
     })
@@ -1492,14 +1550,18 @@ function loadDiaryName() {
 function submitDiary() {
   const nameEl = document.getElementById('diary-name');
   const name = (nameEl.value || '').trim();
-  if (!name) { showToast('⚠ 名前を入力してください'); nameEl.focus(); return; }
+  if (!name) { showToast('⚠ 名前を入力してください'); editDiaryName(); return; }
+  if (_diaryNameEditing) confirmDiaryName();
 
   // Q4/Q5の選択を収集
+  // 本人の育った選択肢（過去の「その他」）は、記録上は「その他:〇〇」として送る（集計の形は今までと同じ）
   const q4 = Array.from(document.querySelectorAll('.diary-checks[data-q="q4"] .diary-check-btn.selected'))
-    .map(function(b){ return b.textContent.trim(); });
-  const q4other = (document.getElementById('diary-q4-other').value || '').trim();
+    .map(function(b){ return b.dataset.custom ? 'その他:' + b.dataset.custom : b.textContent.trim(); });
+  const q4other = q4Clean(document.getElementById('diary-q4-other').value);
   // 「その他」が選択されていて自由入力がある場合、その他→入力値に置換
-  const q4list = q4.map(function(x){ return x === 'その他' && q4other ? 'その他:' + q4other : x; });
+  const q4list = q4.map(function(x){ return x === 'その他' && q4other ? 'その他:' + q4other : x; })
+    .filter(function(x, i, a){ return a.indexOf(x) === i; });
+  const q4newCustom = (q4.indexOf('その他') >= 0 && q4other) ? q4other : '';
   const q5 = Array.from(document.querySelectorAll('.diary-checks[data-q="q5"] .diary-check-btn.selected'))
     .map(function(b){ return b.textContent.trim(); });
   const free = (document.getElementById('diary-free').value || '').trim();
@@ -1528,6 +1590,8 @@ function submitDiary() {
   })
   .then(function(){
     // 名前キャッシュは維持。名前以外をクリアして次の入力に備える。
+    hkAfterSubmit(name, free);
+    if (q4newCustom) q4AddCustom(q4newCustom); // 次回から選択肢として出す
     resetDiaryForm();
     showToast('✓ 提出しました！');
     btn.textContent = '✦ 提出する'; btn.disabled = false;
@@ -1547,6 +1611,66 @@ function resetDiaryForm() {
   if (other) { other.value = ''; other.classList.remove('show'); }
   const free = document.getElementById('diary-free');
   if (free) free.value = '';
+}
+
+// ===== Q4「その他」が本人の選択肢として育つ =====
+// 過去に本人が「その他」に書いた項目を、次回から「その他」の前に選択肢として並べる（最大8件・新しい順）。
+const Q4_CUSTOM_MAX = 8;
+const LS_Q4_CUSTOM = 'marc_q4_custom';  // {name, items:[…]} 端末の控え（表示を速くするため）
+function q4Clean(s) {
+  // 区切り文字「・」と改行は記録を壊すので置き換える
+  return String(s || '').replace(/[\r\n]+/g, ' ').replace(/・/g, '／').replace(/[:：]/g, '：').trim().slice(0, 30);
+}
+function q4BaseLabels() {
+  return Array.from(document.querySelectorAll('.diary-checks[data-q="q4"] .diary-check-btn:not([data-custom])'))
+    .map(function(b) { return b.textContent.trim(); });
+}
+function q4CacheGet(name) {
+  try { const o = JSON.parse(LS.get(LS_Q4_CUSTOM) || '{}'); return (o.name === name && Array.isArray(o.items)) ? o.items : []; } catch(e) { return []; }
+}
+function q4CacheSet(name, items) { LS.set(LS_Q4_CUSTOM, JSON.stringify({ name: name, items: items.slice(0, Q4_CUSTOM_MAX) })); }
+function q4RenderCustom(items) {
+  const box = document.querySelector('.diary-checks[data-q="q4"]');
+  if (!box) return;
+  const selected = Array.from(box.querySelectorAll('.diary-check-btn[data-custom].selected')).map(function(b) { return b.dataset.custom; });
+  box.querySelectorAll('.diary-check-btn[data-custom]').forEach(function(b) { b.remove(); });
+  const other = Array.from(box.querySelectorAll('.diary-check-btn')).find(function(b) { return b.textContent.trim() === 'その他'; });
+  const base = q4BaseLabels();
+  (items || []).slice(0, Q4_CUSTOM_MAX).forEach(function(label) {
+    if (!label || base.indexOf(label) >= 0) return;
+    const b = document.createElement('button');
+    b.className = 'diary-check-btn' + (selected.indexOf(label) >= 0 ? ' selected' : '');
+    b.dataset.custom = label;
+    b.textContent = label;
+    b.onclick = function() { diaryCheck(b); };
+    box.insertBefore(b, other || null);
+  });
+}
+// 名前が決まったとき：端末の控えですぐ表示し、GASの記録で上書きする（別の端末で書いた分も反映）
+function q4LoadCustom() {
+  const name = String(LS.get(LS_NAME) || '').replace(/[\u3000\s]+/g, '');
+  if (!name) { q4RenderCustom([]); return; }
+  q4RenderCustom(q4CacheGet(name));
+  fetch(GAS_URL + '?' + new URLSearchParams({ action: 'getMyQ4', name: name }).toString())
+  .then(function(r) { return r.json(); })
+  .then(function(j) {
+    if (j.status !== 'ok' || !Array.isArray(j.items)) return;
+    const now = String(LS.get(LS_NAME) || '').replace(/[\u3000\s]+/g, '');
+    if (now !== name) return; // 取得中に名前が変わった
+    // サーバーの記録を優先し、まだ反映されていない端末の控えを後ろに足す
+    const merged = j.items.slice();
+    q4CacheGet(name).forEach(function(x) { if (merged.indexOf(x) < 0) merged.push(x); });
+    q4CacheSet(name, merged);
+    q4RenderCustom(merged);
+  })
+  .catch(function() {});
+}
+function q4AddCustom(label) {
+  const name = String(LS.get(LS_NAME) || '').replace(/[\u3000\s]+/g, '');
+  if (!name || !label || q4BaseLabels().indexOf(label) >= 0) return;
+  const items = [label].concat(q4CacheGet(name).filter(function(x) { return x !== label; }));
+  q4CacheSet(name, items);
+  q4RenderCustom(items);
 }
 
 // ===== リーダー配置表 =====
@@ -1617,10 +1741,8 @@ function toggleLeaderDetail(idx) {
   const panel = document.querySelector('.lead-detail-panel[data-idx="'+idx+'"]');
   if (!main || !panel) return;
   const isOpen = panel.classList.contains('active');
-  // 他を閉じる
   document.querySelectorAll('.lead-detail-panel.active').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.leaders-table .lead-main.expanded').forEach(function(m){ m.classList.remove('expanded'); });
-  // 自分をトグル
   if (!isOpen) {
     main.classList.add('expanded');
     panel.classList.add('active');
@@ -1628,7 +1750,6 @@ function toggleLeaderDetail(idx) {
 }
 
 function updateLeaderDisplay(idx) {
-  // 担当者表示
   const inputs = document.querySelectorAll('.lead-person-input[data-idx="'+idx+'"]');
   const disp = document.querySelector('.lead-person-disp[data-idx="'+idx+'"]');
   if (disp) {
@@ -1642,7 +1763,6 @@ function updateLeaderDisplay(idx) {
       }
     });
   }
-  // 最新実施計画表示
   const container = document.getElementById('lead-plans-'+idx);
   const planBox = document.querySelector('.lead-plan-box[data-idx="'+idx+'"]');
   if (planBox) {
@@ -1744,7 +1864,6 @@ function saveLeader(e, idx) {
     body: JSON.stringify(payload)
   })
   .then(function(){
-    // 保存後にサーバから再取得して全員反映を確認
     setTimeout(function(){
       loadLeaders(function(){
         showToast('✓ 「'+r.role+'」を保存しました');
@@ -1779,14 +1898,11 @@ function applyLeadersData() {
   leaderRoles.forEach(function(r, idx){
     const row = leadersData[r.role];
     if (!row) { updateLeaderDisplay(idx); return; }
-    // 担当者を復元
     const persons = String(row['担当者']||row.persons||'').split(/[・,、]+/).filter(function(x){return x.trim();});
     const inputs = document.querySelectorAll('.lead-person-input[data-idx="'+idx+'"]');
     persons.forEach(function(p, i){ if (inputs[i]) inputs[i].value = p.trim(); });
-    // 期待役割を復元
     const expect = document.querySelector('.lead-expect-input[data-idx="'+idx+'"]');
     if (expect) expect.value = row['期待役割']||row.expect||'';
-    // 月別計画を復元
     const container = document.getElementById('lead-plans-'+idx);
     if (container) {
       container.innerHTML = '';
@@ -1807,6 +1923,357 @@ function applyLeadersData() {
 }
 
 function escAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// ===== 仲間の一言（各自の最新1件・リアクション付き） =====
+// GAS の getNews が返す hitokoto: [{ id, name, date, text, reactions:{nice:[],wakaru:[],sanko:[]} }]
+const HK_TYPES = [
+  { k: 'nice',   icon: '👍', label: 'ナイス' },
+  { k: 'wakaru', icon: '🤝', label: 'わかる' },
+  { k: 'sanko',  icon: '💡', label: '参考になる' }
+];
+let hkItems = [], hkOpenNames = null, hkOpenPicker = null;
+let hkDisplayNames = {}; // 部員名簿シートの「氏名→表示名」（GASから受け取る）
+function hkDn(n) { return hkDisplayNames[n] || n; } // 名簿に無ければフルネーム
+
+function hkMe() {
+  return String(LS.get(LS_NAME) || '').replace(/[\u3000\s]+/g, '');
+}
+
+function renderHitokoto(items) {
+  hkItems = Array.isArray(items) ? items : [];
+  hkOpenNames = null; hkOpenPicker = null; hkCommentFor = null;
+  drawHitokoto();
+  hkLoadMyComments();
+}
+
+function drawHitokoto() {
+  const list = document.getElementById('hk-list');
+  if (!list) return;
+  const me = hkMe();
+  // 自分の一言は記入者欄に出しているので、一覧からは除く（i は hkItems 上の位置を保持）
+  const others = hkItems.map(function(it, idx) { return { it: it, idx: idx }; })
+    .filter(function(o) { return !(me && o.it.name === me); });
+  if (!others.length) {
+    list.innerHTML = '<div class="hk-empty">まだ他の部員の一言はありません</div>';
+    drawMyReactions();
+    hkUpdateBadge();
+    return;
+  }
+  const shown = others; // 全員分をすぐ表示（「もっと見る」なし）
+  list.innerHTML = shown.map(function(o) {
+    const it = o.it, i = o.idx;
+    const mine = !!me && it.name === me;
+    const rx = it.reactions || {};
+    let chips = HK_TYPES.filter(function(t) { return (rx[t.k] || []).length; }).map(function(t) {
+      const on = !!me && rx[t.k].indexOf(me) >= 0;
+      return '<button class="hk-chip hk-count' + (on ? ' on' : '') + '" onclick="hkToggleNames(' + i + ',\'' + t.k + '\')">' + t.icon + ' ' + rx[t.k].length + '</button>';
+    }).join('');
+    if (!mine && it.id) chips += '<button class="hk-chip hk-add" aria-label="リアクションする" onclick="hkTogglePicker(' + i + ')">＋</button>';
+    let extra = '';
+    if (hkOpenNames && hkOpenNames.i === i) {
+      const t = HK_TYPES.find(function(x) { return x.k === hkOpenNames.k; });
+      const names = rx[hkOpenNames.k] || [];
+      if (t && names.length) extra = '<div class="hk-names">' + t.icon + ' ' + t.label + '：' + names.map(function(n){ return escH(hkDn(n)); }).join('、') + '</div>';
+    }
+    if (hkOpenPicker === i) {
+      extra = '<div class="hk-picker">' + HK_TYPES.map(function(t) {
+        const on = !!me && (rx[t.k] || []).indexOf(me) >= 0;
+        return '<button class="hk-chip' + (on ? ' on' : '') + '" onclick="hkReact(' + i + ',\'' + t.k + '\')">' + t.icon + ' ' + t.label + '</button>';
+      }).join('') + '<button class="hk-chip' + (hkCommentFor === i ? ' on' : '') + '" onclick="hkOpenComment(' + i + ')">💬 コメント</button></div>';
+      if (hkCommentFor === i) {
+        extra += '<div class="hk-cm-form">'
+          + '<input type="text" id="hk-cm-input" maxlength="' + HK_CM_MAX + '" placeholder="' + escH(hkDn(it.name)).replace(/"/g, '&quot;') + 'さんにだけ届きます（' + HK_CM_MAX + '字まで）" oninput="hkCmCount(this)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();hkSendComment(' + i + ');}">'
+          + '<button class="hk-cm-send" onclick="hkSendComment(' + i + ')">送る</button>'
+          + '</div><div class="hk-cm-count" id="hk-cm-count">0 / ' + HK_CM_MAX + '</div>';
+      }
+    }
+    // 1行目：日付・名前（左）＋リアクション（右）／2行目：一言（2行まで、タップで全文）
+    return '<div class="hk-item' + (mine ? ' mine' : '') + '">'
+      + '<div class="hk-meta"><span class="hk-meta-who"><span class="hk-date">' + escH(it.date) + '</span><span class="hk-name">' + escH(hkDn(it.name)) + '</span></span>'
+      + (chips ? '<span class="hk-rx">' + chips + '</span>' : '') + '</div>'
+      + '<div class="hk-text" onclick="this.classList.toggle(\'open\')">' + escH(it.text) + '</div>'
+      + extra
+      + '</div>';
+  }).join('');
+  drawMyReactions();
+  hkUpdateBadge();
+}
+
+// 既読管理：自分の今の一言について「見た時点で誰の反応があったか」を端末に保存し、
+// それ以降に増えた人を新着とする（GASの時刻情報に頼らないので、どの版のGASでも動く）
+const LS_HK_SEEN = 'marc_hk_seen2'; // {id, r:{nice:[名前],...}, c:[コメントのキー]}
+function hkSeenGet(id) {
+  try { const o = JSON.parse(LS.get(LS_HK_SEEN) || '{}'); return (o.id === id) ? o : { id: id, r: {}, c: [] }; }
+  catch(e) { return { id: id, r: {}, c: [] }; }
+}
+function hkCmKey(c) { return String(c.from) + '|' + String(c.text) + '|' + String(c.ms || ''); }
+// 「あなたの一言」カード：自分の一言を常時表示。届いた反応は見出し右の「〇人から届きました ›」を押すと開く。
+// 前回見た後に届いたものがあるときはカードを金色にし、開いたら既読にする（開いた時の新着の名前は太字）。
+let hkNoticeOpen = false;   // 上部のお知らせを開いているか
+let hkShineId = '';         // 光らせた一言のID（ページを開いて最初の1回だけ光らせる）
+let hkJustSeen = null;      // 開いた時点で新着だった人（このページ表示中は太字のまま）
+function hkMyAllPeople(mine) {
+  const who = [];
+  HK_TYPES.forEach(function(t) { ((mine.reactions || {})[t.k] || []).forEach(function(n) { if (who.indexOf(n) < 0) who.push(n); }); });
+  hkMyComments.forEach(function(c) { if (who.indexOf(c.from) < 0) who.push(c.from); });
+  return who;
+}
+function drawMyReactions() {
+  const me = hkMe();
+  const mine = hkItems.find(function(x) { return me && x.name === me; });
+  // 仲間の一言の呼びかけ：自分の一言に反応をもらったことがある人にだけ出す（他の部員の一言があるとき）
+  const nudge = document.getElementById('hk-nudge');
+  const nwrap = document.getElementById('my-notice-wrap');
+  const notice = document.getElementById('my-notice');
+  const nbody = document.getElementById('my-notice-body');
+  if (nudge) nudge.style.display = 'none';
+  if (!nwrap || !notice || !nbody) return;
+  nwrap.style.display = 'none';
+  if (!mine || !mine.id) { hkNoticeOpen = false; return; }
+  if (hkMyCommentsId !== mine.id) hkMyComments = [];
+  // コメントの読み込みが終わるまでは出さない（途中の人数や色が一瞬出て切り替わるのを防ぐ）
+  if (hkMyCommentsId !== mine.id) return;
+  const rx = mine.reactions || {};
+  const all = hkMyAllPeople(mine);
+  if (!all.length) { hkNoticeOpen = false; return; } // 反応が1件もなければ何も出さない
+  if (nudge && hkItems.some(function(x) { return x.name !== me; })) nudge.style.display = 'block';
+  const nw = hkNewSince(mine);
+  // 開いて既読にした後も、このページを見ている間は「届きました 🎉」のまま（押した直後に表示が変わらないように）
+  const justN = (hkJustSeen || []).filter(function(x) { return all.indexOf(x) >= 0; }).length;
+  const newN = Math.max(nw.who.length, justN);
+  const goText = hkNoticeOpen ? '閉じる ▲' : (newN ? '見る ›' : '›');
+  const go = '<span class="go"></span>';
+  // 光は、ページを開いて未読の新着を最初に表示したときだけ（再描画で光り直さない）
+  if (nw.who.length && !hkShineId) hkShineId = mine.id;
+  const shine = newN && hkShineId === mine.id;
+  notice.className = 'my-notice' + (newN ? ' is-new' : '') + (shine ? ' shine' : '') + (hkNoticeOpen ? ' open' : '');
+  const nhtml = newN
+    ? '<span class="my-cheer" aria-hidden="true">🎉</span>' + escH(mine.date) + 'の一言に' + newN + '人から届きました' + go
+    : escH(mine.date) + 'の一言に' + all.length + '人から届いています' + go;
+  // 内容が変わったときだけ書き換える（毎回書き換えると🎉の動きが再描画のたびにやり直しになるため）
+  if (notice._html !== nhtml) { notice.innerHTML = nhtml; notice._html = nhtml; }
+  const goEl = notice.querySelector('.go');
+  if (goEl && goEl.textContent !== goText) goEl.textContent = goText;
+  if (hkNoticeOpen) {
+    const bold = hkJustSeen || [];
+    const nm = function(n) { const d = escH(hkDn(n)); return bold.indexOf(n) >= 0 ? '<b class="my-new">' + d + '</b>' : d; };
+    const lines = HK_TYPES.filter(function(t) { return (rx[t.k] || []).length; }).map(function(t) {
+      return '<div class="my-line">' + t.icon + ' ' + rx[t.k].map(nm).join('、') + '<span class="my-lbl">が' + t.label + '</span></div>';
+    }).join('') + hkMyComments.map(function(c) {
+      return '<div class="my-line">💬 ' + nm(c.from) + '「' + escH(c.text) + '」</div>';
+    }).join('');
+    nbody.innerHTML = '<div class="my-notice-label">前回の一言</div><div class="my-text">' + escH(mine.text) + '</div><div class="my-rx">' + lines + '</div>';
+    nbody.style.display = 'block';
+  } else {
+    nbody.style.display = 'none';
+  }
+  nwrap.style.display = 'block';
+}
+// 開いている状態で見えている新着を既読にする（コメントの読み込みが後から終わった場合も呼ばれる）
+function hkMarkMySeen(mine) {
+  if (!mine || !mine.id) return;
+  if (hkMyCommentsId !== mine.id) hkMyComments = [];
+  const n = hkNewSince(mine);
+  hkJustSeen = (hkJustSeen || []).concat(n.who.filter(function(x) { return (hkJustSeen || []).indexOf(x) < 0; }));
+  const seen = hkSeenGet(mine.id);
+  seen.r = seen.r || {};
+  HK_TYPES.forEach(function(t) { seen.r[t.k] = ((mine.reactions || {})[t.k] || []).slice(); });
+  if (hkMyCommentsId === mine.id) seen.c = hkMyComments.map(hkCmKey);
+  LS.set(LS_HK_SEEN, JSON.stringify(seen));
+}
+// 上部の1行を押す：その場で自分の一言と届いた反応を開閉する（開いたら既読）
+function hkToggleNotice() {
+  const me = hkMe();
+  const mine = hkItems.find(function(x) { return me && x.name === me; });
+  if (!mine) return;
+  hkNoticeOpen = !hkNoticeOpen;
+  if (hkNoticeOpen) hkMarkMySeen(mine);
+  drawMyReactions();
+}
+// 前回見た後に届いたリアクション・コメントの送り主を返す（前回見た時にいなかった人＝新着）
+function hkNewSince(mine) {
+  const seen = hkSeenGet(mine.id);
+  const sr = seen.r || {}, sc = seen.c || [];
+  const who = [], types = [];
+  HK_TYPES.forEach(function(t) {
+    const before = sr[t.k] || [];
+    const added = ((mine.reactions || {})[t.k] || []).filter(function(n) { return before.indexOf(n) < 0; });
+    if (added.length) { types.push(t); added.forEach(function(n) { if (who.indexOf(n) < 0) who.push(n); }); }
+  });
+  const newCm = hkMyComments.filter(function(c) { return sc.indexOf(hkCmKey(c)) < 0; });
+  newCm.forEach(function(c) { if (who.indexOf(c.from) < 0) who.push(c.from); });
+  return { who: who, types: types, cm: newCm.length };
+}
+
+function hkToggleNames(i, k) {
+  hkOpenPicker = null;
+  hkOpenNames = (hkOpenNames && hkOpenNames.i === i && hkOpenNames.k === k) ? null : { i: i, k: k };
+  drawHitokoto();
+}
+
+function hkTogglePicker(i) {
+  hkOpenNames = null;
+  hkOpenPicker = (hkOpenPicker === i) ? null : i;
+  hkCommentFor = null;
+  drawHitokoto();
+}
+
+// ===== コメント（書かれた本人にだけ表示） =====
+const HK_CM_MAX = 30;
+let hkCommentFor = null; // コメント入力欄を開いている行
+let hkMyComments = [];   // 自分の一言に届いたコメント
+let hkMyCommentsId = ''; // 上のコメントがどの一言（対象ID）の分か
+
+function hkOpenComment(i) {
+  if (!hkMe()) { showToast('⚠ 先に名前を入力してください'); editDiaryName(); return; }
+  hkCommentFor = (hkCommentFor === i) ? null : i;
+  drawHitokoto();
+  const el = document.getElementById('hk-cm-input');
+  if (el) el.focus();
+}
+function hkCmCount(el) {
+  const c = document.getElementById('hk-cm-count');
+  if (c) c.textContent = el.value.length + ' / ' + HK_CM_MAX;
+}
+function hkSendComment(i) {
+  const it = hkItems[i];
+  const el = document.getElementById('hk-cm-input');
+  const me = hkMe();
+  if (!it || !it.id || !el) return;
+  const text = el.value.replace(/[\r\n]+/g, ' ').trim();
+  if (!text) { showToast('⚠ コメントを入力してください'); el.focus(); return; }
+  if (text.length > HK_CM_MAX) { showToast('⚠ ' + HK_CM_MAX + '字以内にしてください'); return; }
+  if (!me || me === it.name) return;
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ _token: WRITE_TOKEN, action: 'addComment', targetId: it.id, text: text, commenter: me })
+  })
+  .then(function() { showToast('✓ ' + hkDn(it.name) + 'さんにだけ届けました'); })
+  .catch(function() { showToast('⚠ 通信に失敗しました。もう一度送ってください'); });
+  hkCommentFor = null; hkOpenPicker = null;
+  drawHitokoto();
+}
+// 自分の今の一言に届いたコメントを取得（他の人の分は取得しない）
+function hkLoadMyComments() {
+  const me = hkMe();
+  const mine = hkItems.find(function(x) { return me && x.name === me; });
+  if (!mine || !mine.id) { hkMyComments = []; hkMyCommentsId = ''; drawMyReactions(); return; }
+  const reqId = mine.id;
+  fetch(GAS_URL + '?' + new URLSearchParams({ action: 'getMyComments', name: me, id: mine.id }).toString())
+  .then(function(r) { return r.json(); })
+  .then(function(j) {
+    const now = hkItems.find(function(x) { return x.name === hkMe(); });
+    if (!now || now.id !== reqId) return; // 取得中に名前が変わった場合は捨てる
+    hkMyComments = (j.status === 'ok' && Array.isArray(j.comments)) ? j.comments : [];
+    hkMyCommentsId = reqId;
+    if (hkNoticeOpen) hkMarkMySeen(now); // 開いたまま届いたコメントも既読に
+    drawMyReactions();
+  })
+  .catch(function() {
+    // 取得できなくても、リアクションの表示は出す
+    const now = hkItems.find(function(x) { return x.name === hkMe(); });
+    if (!now || now.id !== reqId) return;
+    hkMyComments = []; hkMyCommentsId = reqId; drawMyReactions();
+  });
+}
+
+// リアクションの付与／取り消し：画面は先に反映し、送信は裏で行う
+function hkReact(i, k) {
+  const it = hkItems[i];
+  if (!it || !it.id) return;
+  const me = hkMe();
+  if (!me) {
+    showToast('⚠ 先に名前を入力してください');
+    editDiaryName();
+    highlightMissing(document.getElementById('diary-name'));
+    return;
+  }
+  if (me === it.name) return;
+  it.reactions = it.reactions || {};
+  const arr = it.reactions[k] = it.reactions[k] || [];
+  const j = arr.indexOf(me);
+  if (j >= 0) arr.splice(j, 1);
+  else arr.push(me);
+  hkOpenPicker = null;
+  hkOpenNames = arr.length ? { i: i, k: k } : null;
+  drawHitokoto();
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ _token: WRITE_TOKEN, action: 'toggleReaction', targetId: it.id, type: k, reactor: me })
+  }).catch(function() { showToast('⚠ 通信に失敗しました。もう一度押してください'); });
+}
+
+// 日記提出直後：自分の一言を先頭に置き換え、少し待って正式なデータを取り直す
+function hkAfterSubmit(name, text) {
+  const n = String(name || '').replace(/[\u3000\s]+/g, '');
+  const t = String(text || '').trim();
+  if (n && t) {
+    const now = new Date();
+    const label = (now.getMonth() + 1) + '/' + now.getDate() + '(' + ['日','月','火','水','木','金','土'][now.getDay()] + ')';
+    hkItems = hkItems.filter(function(x) { return x.name !== n; });
+    hkItems.unshift({ id: '', name: n, text: t, date: label, reactions: {} });
+    hkOpenNames = null; hkOpenPicker = null;
+    drawHitokoto();
+  }
+  setTimeout(loadNews, 1500);
+  // 提出後は完了表示を出す（タブは自動で切り替えない。「仲間の一言を見る」で本人が切り替える）
+  const done = document.getElementById('diary-done');
+  if (done) done.style.display = 'flex';
+}
+
+// ===== 日記を書く／仲間の一言 の切り替え =====
+const LS_HK_PEERS_SEEN = 'marc_hk_peers_seen'; // 「仲間の一言」を開いた時点で見えていた一言のID
+function hkPeersSeen() { try { return JSON.parse(LS.get(LS_HK_PEERS_SEEN) || '[]'); } catch(e) { return []; } }
+function hkOthers() {
+  const me = hkMe();
+  return hkItems.filter(function(x) { return x.id && !(me && x.name === me); });
+}
+// 「仲間の一言」ボタンの赤い数字：前回このタブを開いた後に増えた（または書き直された）仲間の一言の数
+function hkUpdateBadge() {
+  const badge = document.getElementById('seg-badge');
+  if (!badge) return;
+  const peersOn = (document.getElementById('pane-peers') || {}).className === 'diary-pane on';
+  if (peersOn) hkMarkPeersSeen();
+  const seen = hkPeersSeen();
+  const fresh = hkOthers().filter(function(x) { return seen.indexOf(x.id) < 0; });
+  const n = fresh.length;
+  badge.textContent = n > 9 ? '9+' : String(n);
+  badge.style.display = n ? 'inline-block' : 'none';
+  // ボタンの中（2行目）に、新しく書いた仲間の名前を出す（新しい順・2人まで名前、3人以上は「ほか◯人」）
+  const namesEl = document.getElementById('seg-names');
+  if (namesEl) {
+    if (n && !peersOn) {
+      const names = fresh.map(function(x) { return hkDn(x.name); });
+      namesEl.textContent = n <= 2 ? names.join('・') : names.slice(0, 2).join('・') + ' ほか' + (n - 2) + '人';
+      namesEl.style.display = 'block';
+    } else {
+      namesEl.style.display = 'none';
+    }
+  }
+}
+function hkMarkPeersSeen() {
+  LS.set(LS_HK_PEERS_SEEN, JSON.stringify(hkOthers().map(function(x) { return x.id; })));
+}
+function hkSwitchPane(p) {
+  const peers = p === 'peers';
+  const w = document.getElementById('pane-write'), q = document.getElementById('pane-peers');
+  const bw = document.getElementById('seg-write'), bq = document.getElementById('seg-peers');
+  if (!w || !q || !bw || !bq) return;
+  w.className = 'diary-pane' + (peers ? '' : ' on');
+  q.className = 'diary-pane' + (peers ? ' on' : '');
+  bw.className = peers ? '' : 'on'; bq.className = peers ? 'on' : '';
+  bw.setAttribute('aria-selected', String(!peers)); bq.setAttribute('aria-selected', String(peers));
+  const news = document.getElementById('tab-news');
+  if (news) news.classList.toggle('peers-mode', peers);
+  hkUpdateBadge();
+  // 切り替えボタンが上部の固定タブに隠れる位置までスクロールしていたら、見える位置まで戻す
+  const seg = document.querySelector('.diary-seg');
+  const bar = document.querySelector('.tab-bar');
+  const barBottom = bar ? bar.getBoundingClientRect().bottom : 0;
+  if (seg && seg.getBoundingClientRect().top < barBottom && seg.scrollIntoView) seg.scrollIntoView({ block: 'start' });
+}
+
 /* ===LEADERS_JS_INSERT=== */
 </script>
 </body>
