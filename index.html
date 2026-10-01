@@ -272,6 +272,172 @@ window.addEventListener('load', function () {
   .diary-submit-btn { width: 100%; margin-top: 6px; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-lt)); color: #fff; border: none; border-radius: var(--radius-md); font-family: inherit; font-size: 15px; font-weight: 700; letter-spacing: .04em; cursor: pointer; transition: all .2s; box-shadow: 0 3px 12px rgba(26,58,107,0.25); }
   .diary-submit-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
   .diary-submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  /* 提出ボタン2つを横並び（同じ色・同じ幅。左：提出＋分析 / 右：提出する） */
+  .diary-submit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+  .diary-submit-row .diary-submit-btn { margin-top: 0; min-height: 56px; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.25; white-space: nowrap; letter-spacing: 0; font-size: clamp(13px, 3.9vw, 15px); }
+  .diary-submit-btn .sub { display: block; font-size: 10.5px; font-weight: 500; letter-spacing: 0; opacity: .8; margin-top: 2px; }
+  /* 日記の分析 */
+  .da-card { margin-top: 12px; padding: 14px 16px; border-radius: var(--radius-md); background: #F4F7FC; border: 1px solid rgba(26,58,107,0.15); color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+  .da-head { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--primary); font-size: 14px; margin-bottom: 4px; }
+  .da-head button { margin-left: auto; min-height: 30px !important; padding: 0 10px; border: 1px solid rgba(26,58,107,0.3); border-radius: 999px; background: var(--surface); color: var(--primary); font-family: inherit; font-size: 12px; cursor: pointer; }
+  .da-meta { font-size: 12px; color: var(--ink-muted); margin-bottom: 8px; }
+  .da-sec { margin-top: 10px; }
+  .da-sec-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .da-avg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .da-avg div { background: var(--surface); border-radius: 10px; padding: 6px 4px; text-align: center; font-size: 11px; }
+  .da-avg b { display: block; font-size: 18px; color: var(--primary); line-height: 1.3; }
+  .da-avg small { display: block; font-size: 11px; color: var(--ink-muted); }
+  .da-row { background: var(--surface); border-radius: 10px; padding: 6px 10px; margin-bottom: 4px; }
+  .da-row b { color: var(--ink-soft); }
+  .da-note { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+  .da-period { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: rgba(26,58,107,0.08); border-radius: 999px; padding: 3px; margin: 6px 0 8px; }
+  .da-period button { min-height: 32px !important; border: none; border-radius: 999px; background: transparent; color: var(--primary); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; padding: 0; }
+  .da-period button.on { background: var(--primary); color: #fff; }
+  .da-period button { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; min-height: 40px !important; }
+  .da-period button small { font-size: 9.5px; font-weight: 500; opacity: .8; }
+  .da-period button.empty:not(.on) { opacity: .5; }
+  .da-empty { background: var(--surface); border-radius: 12px; padding: 12px; margin-top: 6px; font-size: 13px; color: var(--ink-soft); font-weight: 700; }
+  .da-empty-s { font-size: 11.5px; font-weight: 400; color: var(--ink-muted); margin-top: 2px; }
+  .da-empty-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .da-empty-btns button { min-height: 36px !important; padding: 0 12px; border: 1.5px solid var(--primary); border-radius: 999px; background: var(--surface); color: var(--primary); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .da-bar-block { background: var(--surface); border-radius: 10px; padding: 8px 10px 6px; margin-bottom: 6px; }
+  .da-bar-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 12px; }
+  .da-bar-head b { color: var(--ink-soft); font-size: 13px; }
+  .da-bar-avg { color: var(--primary); font-weight: 700; }
+  .da-bar-trend { color: var(--ink-muted); font-size: 11px; }
+  .da-bars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 4px; }
+  .da-bar-col { display: flex; flex-direction: column; align-items: center; }
+  .da-bar-n { font-size: 10.5px; color: var(--ink-soft); height: 15px; line-height: 15px; }
+  .da-bar-track { width: 100%; max-width: 34px; height: 56px; display: flex; align-items: flex-end; border-bottom: 1px solid rgba(26,58,107,0.25); }
+  .da-bar { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; }
+  .da-bar-x { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+  .da-bar-ends { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-muted); margin-top: 1px; }
+  .da-tbl { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); border-radius: 10px; overflow: hidden; font-size: 12px; }
+  .da-tbl th, .da-tbl td { padding: 6px 8px; text-align: center; border-bottom: 1px solid rgba(26,58,107,0.08); }
+  .da-tbl thead th { font-size: 11px; color: var(--ink-muted); font-weight: 500; white-space: nowrap; padding: 6px 4px; }
+  .da-tbl tbody th { text-align: left; font-weight: 700; color: var(--ink-soft); }
+  .da-tbl td { font-weight: 700; color: var(--primary); font-size: 14px; }
+  .da-tbl tr:last-child th, .da-tbl tr:last-child td { border-bottom: none; }
+  .da-q5 { display: grid; grid-template-columns: 1fr; gap: 4px; }
+  .da-q5 div { display: flex; justify-content: space-between; gap: 6px; background: var(--surface); border-radius: 8px; padding: 5px 9px; font-size: 12px; }
+  .da-q5 b { color: var(--primary); white-space: nowrap; }
+  .da-rx { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .da-rx div { background: var(--surface); border-radius: 10px; padding: 6px 4px; text-align: center; }
+  .da-rx-icon { font-size: 16px; }
+  .da-rx b { display: block; font-size: 18px; color: var(--primary); line-height: 1.2; }
+  .da-rx small { display: block; font-size: 11px; color: var(--ink-muted); }
+  .da-sub-title { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin: 8px 0 4px; }
+  .da-cm { background: var(--surface); border-radius: 10px; padding: 6px 10px; margin-bottom: 4px; }
+  .da-cm-text { color: var(--ink-soft); }
+  .da-cm-meta { font-size: 11px; color: var(--ink-muted); }
+  /* 横棒グラフ */
+  .da-hbars { display: flex; flex-direction: column; gap: 8px; background: var(--surface); border-radius: 10px; padding: 10px; }
+  .da-hbar-label { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--ink-soft); margin-bottom: 3px; }
+  .da-hbar-label b { color: var(--primary); white-space: nowrap; }
+  .da-hbar-track { flex: 1; height: 12px; background: rgba(26,58,107,0.06); border-radius: 0 4px 4px 0; overflow: hidden; }
+  .da-hbar { height: 100%; background: var(--primary); border-radius: 0 4px 4px 0; }
+  .da-hbar.lo { background: #9fb3d6; }
+  .da-hbar-detail { font-size: 10.5px; color: var(--ink-muted); margin-top: 2px; }
+  .da-stack { display: flex; gap: 2px; height: 100%; }
+  .da-seg { height: 100%; min-width: 3px; }
+  .da-seg:last-child { border-radius: 0 4px 4px 0; }
+  .o-good { background: #2a5298; } .o-some { background: #6f9be0; } .o-bad { background: #d9822b; } .o-other { background: #98a3b6; }
+  .da-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; }
+  .da-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  /* 続けて意識（塗りのマス） */
+  .da-tl { background: var(--surface); border-radius: 10px; padding: 10px; }
+  .da-tl-row { margin-bottom: 8px; }
+  .da-tl-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--ink-soft); margin-bottom: 3px; }
+  .da-tl-head b { color: var(--primary); white-space: nowrap; }
+  .da-tl-cells { display: grid; gap: 2px; }
+  .da-tl-cells i { display: block; height: 14px; border-radius: 3px; background: rgba(26,58,107,0.08); }
+  .da-tl-cells i.on { background: var(--primary); }
+  .da-tl-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-muted); }
+  /* 充実度の高い日・低い日 */
+  .da-gbar-block { background: var(--surface); border-radius: 10px; padding: 8px 10px; margin-bottom: 6px; }
+  .da-gbar-name { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
+  .da-gbar { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .da-gbar-lab { width: 3.6em; font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+  .da-gbar b { width: 2em; text-align: right; font-size: 13px; color: var(--primary); }
+  /* v11：今の目標・テーマの進み具合・調子の波・次の稽古へ */
+  .da-goal { background: var(--surface); border-left: 4px solid var(--primary); border-radius: 0 10px 10px 0; padding: 8px 12px; margin: 14px 0 0; }
+  .da-goal-k { font-size: 11px; font-weight: 700; color: var(--ink-muted); }
+  .da-goal-t { font-size: 15px; font-weight: 700; color: var(--primary); line-height: 1.5; }
+  .da-goal-s { font-size: 10.5px; color: var(--ink-muted); }
+  .da-fc { background: var(--surface); border-radius: 10px; padding: 8px 10px; margin-bottom: 6px; }
+  .da-fc-name { color: var(--ink-soft); font-size: 13px; }
+  .da-seq i { height: 18px; }
+  .da-tl-cells i.o-good { background: #2a5298; } .da-tl-cells i.o-some { background: #6f9be0; }
+  .da-tl-cells i.o-bad { background: #d9822b; } .da-tl-cells i.o-other { background: #98a3b6; }
+  .da-tl-cells i.m, .da-legend i.m { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.85) 0 2px, transparent 2px 4px); }
+  .da-halves { margin-top: 6px; border-top: 1px dashed rgba(26,58,107,0.15); padding-top: 6px; }
+  .da-half { margin-bottom: 4px; }
+  .da-half-lab { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+  .da-half-lab small { font-weight: 400; color: var(--ink-muted); margin-left: 6px; }
+  .da-wave-box { background: var(--surface); border-radius: 10px; padding: 8px 8px 6px; }
+  .da-wave { width: 100%; height: auto; display: block; }
+  /* PCなど横に広い画面で、グラフが縦に大きくなりすぎないように幅を抑える */
+  #diary-analysis { max-width: 640px; margin-left: auto; margin-right: auto; }
+  .da-wave .w-grid { stroke: rgba(26,58,107,0.10); stroke-width: 1; }
+  .da-wave .w-ax { font-size: 8px; fill: var(--ink-muted); }
+  .da-wave .w-tick { stroke: rgba(26,58,107,0.35); stroke-width: 1; }
+  .da-wave .w-q3 { stroke: #2a5298; stroke-width: 2; }
+  .da-wave .w-q1 { stroke: #1f9e89; stroke-width: 2; stroke-dasharray: 4 3; }
+  .da-wave .w-q3-pt { fill: #2a5298; stroke: #fff; stroke-width: 1; }
+  .da-wave .w-q1-pt { fill: #1f9e89; stroke: #fff; stroke-width: 1; }
+  .da-wave .w-cur { stroke: rgba(26,58,107,0.4); stroke-width: 1; }
+  .da-wave .w-hit { fill: transparent; cursor: pointer; }
+  .da-legend i.w-q3-sw { background: #2a5298; height: 3px; width: 14px; vertical-align: 3px; }
+  .da-legend i.w-q1-sw { background: repeating-linear-gradient(90deg, #1f9e89 0 4px, transparent 4px 7px); height: 3px; width: 14px; vertical-align: 3px; }
+  .da-wave-info { font-size: 11.5px; color: var(--ink-soft); margin-top: 4px; min-height: 1.6em; }
+  /* 表示の最適化（v11.1） */
+  .da-box { background: var(--surface); border-radius: 12px; padding: 10px 10px 8px; }
+  .da-box-title { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+  .da-key { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11.5px; color: var(--ink-soft); margin-top: 4px; }
+  .da-key i { display: inline-block; vertical-align: middle; margin-right: 5px; }
+  .da-key .k-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+  .da-key .k-dot.k-multi { background: #fff; border: 2px solid var(--primary); box-sizing: border-box; width: 11px; height: 11px; }
+  .da-key .k-dot { width: 11px; height: 11px; }
+  .da-key .k-line { width: 16px; height: 3px; border-radius: 2px; }
+  .da-key .k-q3 { background: #2a5298; }
+  .da-key .k-q1 { background: repeating-linear-gradient(90deg, #1f9e89 0 5px, transparent 5px 8px); }
+  .da-key .k-q2 { background: repeating-linear-gradient(90deg, #c8691c 0 2px, transparent 2px 4px); }
+  .da-wave .w-q2 { stroke: #c8691c; stroke-width: 2; stroke-dasharray: 1.5 2.5; stroke-linecap: round; }
+  .da-wave .w-q2-pt { fill: #c8691c; stroke: #fff; stroke-width: 1; }
+  .da-wave.hide-q1 .w-q1, .da-wave.hide-q1 .w-q1-pt, .da-wave.hide-q2 .w-q2, .da-wave.hide-q2 .w-q2-pt, .da-wave.hide-q3 .w-q3, .da-wave.hide-q3 .w-q3-pt { display: none; }
+  .da-key-btns button { display: inline-flex; align-items: center; min-height: 30px !important; padding: 0 10px; border: 1px solid rgba(26,58,107,0.25); border-radius: 999px; background: var(--surface); color: var(--ink-soft); font-family: inherit; font-size: 11.5px; cursor: pointer; }
+  .da-key-btns button[aria-pressed="false"] { opacity: .45; text-decoration: line-through; }
+  .da-wave .w-ax { font-size: 11px; }
+  .da-wave .w-date { font-size: 10.5px; fill: var(--ink-muted); }
+  .da-wave .w-grid.w-mid { stroke: rgba(26,58,107,0.22); }
+  .da-wave .w-q3 { stroke-width: 2.5; }
+  .da-theme { display: flex; flex-direction: column; margin: 0 0 8px; }
+  .da-theme-name { font-size: 18px; font-weight: 800; color: var(--primary); line-height: 1.3; }
+  .da-theme-sub { font-size: 11.5px; color: var(--ink-muted); }
+  .da-seq-chart { width: 100%; height: auto; display: block; margin-top: 4px; }
+  .da-seq-chart .s-lane { stroke: rgba(26,58,107,0.12); stroke-width: 1; }
+  .da-seq-chart .s-lane-o { stroke-dasharray: 2 3; }
+  .da-seq-chart .s-lab { font-size: 12.5px; font-weight: 700; fill: var(--ink-soft); }
+  .da-seq-chart .s-lab-o { font-weight: 400; fill: var(--ink-muted); font-size: 11px; }
+  .da-seq-chart .s-path { stroke: rgba(26,58,107,0.35); stroke-width: 1.5; }
+  .da-seq-chart .s-dot { fill: var(--primary); stroke: #fff; stroke-width: 1.5; }
+  .da-seq-chart .s-dot.s-multi { fill: #fff; stroke: var(--primary); stroke-width: 2; }
+  .da-seq-chart .s-dot.s-other { fill: #98a3b6; }
+  .da-seq-chart .s-dot.s-other.s-multi { fill: #fff; stroke: #98a3b6; }
+  .da-seq-chart .w-cur { stroke: rgba(26,58,107,0.4); stroke-width: 1; }
+  .da-seq-chart .w-hit { fill: transparent; cursor: pointer; }
+  .da-cmp { display: flex; align-items: stretch; gap: 8px; margin-top: 8px; }
+  .da-cmp-cell { flex: 1; background: var(--surface); border-radius: 12px; padding: 8px 10px; text-align: center; }
+  .da-cmp-k { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); }
+  .da-cmp-v { font-size: 26px; font-weight: 800; color: var(--primary); line-height: 1.2; }
+  .da-cmp-v small { font-size: 12px; font-weight: 700; margin-left: 2px; }
+  .da-cmp-s { font-size: 10.5px; color: var(--ink-muted); }
+  .da-cmp-arrow { align-self: center; font-size: 18px; color: var(--ink-muted); }
+  .da-cmp-cap { font-size: 11px; color: var(--ink-muted); margin-top: 4px; text-align: center; }
+  .da-next { margin-top: 12px; background: var(--primary); color: #fff; border-radius: 12px; padding: 10px 14px; }
+  .da-next-k { font-size: 11px; font-weight: 700; opacity: .8; }
+  .da-next-q { font-size: 14px; font-weight: 700; line-height: 1.6; }
+  .da-next-s { font-size: 11px; opacity: .85; margin-top: 2px; }
   /* ===== リーダー配置表 ===== */
   .leaders-wrap { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm); padding: 16px 20px; margin-bottom: 14px; }
   .leaders-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -564,13 +730,19 @@ window.addEventListener('load', function () {
         <textarea id="diary-free" class="diary-free" placeholder="自由に記入（部員全員に公開されます）"></textarea>
       </div>
 
-      <button class="diary-submit-btn" id="diary-submit-btn" onclick="submitDiary()">✦ 提出する</button>
+      <div class="diary-submit-row">
+        <button class="diary-submit-btn analyze" id="diary-submit-analyze-btn" onclick="submitDiary(true)">📊 提出＋分析<span class="sub">期間を選んで振り返る</span></button>
+        <button class="diary-submit-btn" id="diary-submit-btn" onclick="submitDiary(false)">✦ 提出する</button>
+      </div>
 
       <!-- 提出後の完了表示（画面は自動で切り替えない） -->
       <div class="diary-done" id="diary-done" style="display:none;">
         <span>✓ 提出しました</span>
         <button type="button" onclick="hkSwitchPane('peers')">💬 仲間の一言を見る ›</button>
       </div>
+
+      <!-- 日記の分析（「提出＋分析」のときだけ表示。期間はカード内で選ぶ） -->
+      <div class="da-card" id="diary-analysis" style="display:none;"></div>
       </div>
 
       <!-- ===== 仲間の一言 ===== -->
@@ -1556,8 +1728,8 @@ function loadDiaryName() {
   }
 }
 
-// 提出
-function submitDiary() {
+// 提出（withAnalysis=true のときは、提出後に日記の分析を表示する）
+function submitDiary(withAnalysis) {
   const nameEl = document.getElementById('diary-name');
   const name = (nameEl.value || '').trim();
   if (!name) { showToast('⚠ 名前を入力してください'); editDiaryName(); return; }
@@ -1576,8 +1748,13 @@ function submitDiary() {
     .map(function(b){ return b.textContent.trim(); });
   const free = (document.getElementById('diary-free').value || '').trim();
 
-  const btn = document.getElementById('diary-submit-btn');
-  btn.textContent = '送信中…'; btn.disabled = true;
+  const btn  = document.getElementById('diary-submit-btn');
+  const btn2 = document.getElementById('diary-submit-analyze-btn');
+  const label1 = btn.innerHTML, label2 = btn2.innerHTML;
+  const restore = function() { btn.innerHTML = label1; btn2.innerHTML = label2; btn.disabled = false; btn2.disabled = false; };
+  (withAnalysis ? btn2 : btn).textContent = '送信中…';
+  btn.disabled = true; btn2.disabled = true;
+  daHide();
 
   const data = {
     記録種別: '剣道日記',
@@ -1603,13 +1780,312 @@ function submitDiary() {
     hkAfterSubmit(name, free);
     if (q4newCustom) q4AddCustom(q4newCustom); // 次回から選択肢として出す
     resetDiaryForm();
-    showToast('✓ 提出しました！');
-    btn.textContent = '✦ 提出する'; btn.disabled = false;
+    showToast(withAnalysis ? '✓ 提出しました。分析を表示します' : '✓ 提出しました！');
+    restore();
+    if (withAnalysis) { daDays = DA_DEFAULT_DAYS; daCounts = null; daLoad(name); daReveal(); }
   })
   .catch(function(){
     showToast('⚠ 送信に失敗しました。再度お試しください');
-    btn.textContent = '✦ 提出する'; btn.disabled = false;
+    restore();
   });
+}
+
+// ===== 日記の分析（期間を選べる：1週間／1か月／3か月／全期間） =====
+// GAS の analyzeDiary が数えた結果をそのまま表示する（文章による推測はしない）。
+// 範囲は日付ではなく「直近の記録◯回分」（記録のない期間を選んで空になることがない）
+const DA_PERIODS = [ { d: 7, label: '直近7回' }, { d: 30, label: '直近30回' }, { d: 90, label: '直近90回' }, { d: 0, label: '全部' } ];
+const DA_DEFAULT_DAYS = 7; // 開いたときの期間：直近1週間（前回選んだ期間は覚えない）
+let daName = '', daDays = DA_DEFAULT_DAYS, daReq = 0, daCounts = null;
+function daEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; });
+}
+function daHide() {
+  const el = document.getElementById('diary-analysis');
+  if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+}
+function daHead() {
+  return '<div class="da-head">📊 日記の分析<button type="button" onclick="daHide()">閉じる</button></div>'
+    + '<div class="da-period" role="group" aria-label="期間">'
+    + DA_PERIODS.map(function(p) {
+        const c = daCounts ? daCounts[p.d] : null;
+        return '<button type="button" class="' + (p.d === daDays ? 'on' : '') + (c === 0 ? ' empty' : '') + '" aria-pressed="' + (p.d === daDays) + '" onclick="daSetPeriod(' + p.d + ')">'
+          + p.label + (c != null && (p.d === 0 || c < p.d) ? '<small>' + c + '回分</small>' : '') + '</button>';
+      }).join('')
+    + '</div>';
+}
+// 提出直後：分析カードが画面の下に隠れたままにならないよう、カードの先頭まで自動でスクロールする
+// （上部に固定されたタブバーの下に来る位置。動きを減らす設定の端末ではアニメーションしない）
+function daReveal() {
+  const el = document.getElementById('diary-analysis');
+  if (!el) return;
+  const bar = document.querySelector('.tab-bar');
+  const off = (bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0) + 12;
+  const top = el.getBoundingClientRect().top + window.pageYOffset - off;
+  let reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  window.scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
+}
+function daSetPeriod(d) {
+  if (d === daDays) return;
+  daDays = d;
+  daLoad(daName);
+}
+function daLoad(name) {
+  const el = document.getElementById('diary-analysis');
+  if (!el) return;
+  daName = String(name || '').replace(/[　\s]+/g, '');
+  const req = ++daReq; // 期間を素早く切り替えたとき、古い結果で上書きしない
+  el.innerHTML = daHead() + '<div class="da-meta">分析中…</div>';
+  el.style.display = 'block';
+  fetch(GAS_URL + '?' + new URLSearchParams({ action: 'analyzeDiary', name: daName, days: String(daDays), _: Date.now() }).toString())
+    .then(function(res) { return res.text(); })
+    .then(function(text) {
+      if (req !== daReq) return;
+      const json = JSON.parse(text);
+      if (json.status !== 'ok') throw new Error(json.message || 'error');
+      if (json.periodCounts) daCounts = json.periodCounts;
+      el.innerHTML = daHead() + daRender(json);
+    })
+    .catch(function() {
+      if (req !== daReq) return;
+      el.innerHTML = daHead() + '<div class="da-meta">分析を読み込めませんでした。日記は提出済みです。時間をおいてもう一度お試しください。</div>';
+    });
+}
+function daLabel(s) { return String(s || '').replace(/^その他:/, ''); } // 本人が育てた項目は名前だけ出す
+function daNum(v) { return (v == null) ? '—' : Number(v).toFixed(1); }
+
+// 仲間からの反応
+function daPeers(d) {
+  const p = d.peers;
+  if (!p) return '';
+  const rx = p.reactions || {};
+  const types = (typeof HK_TYPES !== 'undefined') ? HK_TYPES : [ { k: 'nice', icon: '👍', label: 'ナイス' }, { k: 'wakaru', icon: '🤝', label: 'わかる' }, { k: 'sanko', icon: '💡', label: '参考になる' } ];
+  const totalRx = types.reduce(function(a, t) { return a + (rx[t.k] || 0); }, 0);
+  let h = '<div class="da-sec"><div class="da-sec-title">③ 仲間からの反応</div>';
+  if (!totalRx && !p.commentTotal) return h + '<div class="da-row">この範囲の反応はまだありません。</div></div>';
+  h += '<div class="da-rx">' + types.map(function(t) {
+    return '<div><span class="da-rx-icon">' + t.icon + '</span><b>' + (rx[t.k] || 0) + '</b><small>' + t.label + '</small></div>';
+  }).join('') + '</div>';
+  if (p.reactors && p.reactors.length) {
+    h += '<div class="da-sub-title">反応をくれた仲間</div>' + daHBars(p.reactors.map(function(r) { return { label: r.name, value: r.count }; }), '回');
+  }
+  if (p.commentTotal) {
+    h += '<div class="da-sub-title">💬 コメント ' + p.commentTotal + '件' + (p.commentTotal > p.comments.length ? '（新しい' + p.comments.length + '件を表示）' : '') + '</div>';
+    p.comments.forEach(function(c) {
+      h += '<div class="da-cm"><div class="da-cm-text">' + daEsc(c.text) + '</div><div class="da-cm-meta">' + daEsc(c.from) + '　' + daEsc(c.date) + '</div></div>';
+    });
+  }
+  return h + '</div>';
+}
+
+// 横棒グラフ（1系列）：items = [{label, value}]
+function daHBars(items, unit) {
+  const max = Math.max.apply(null, items.map(function(x) { return x.value; }).concat([1]));
+  return '<div class="da-hbars">' + items.map(function(x) {
+    const pct = x.value ? Math.max(3, Math.round(x.value / max * 100)) : 0;
+    return '<div class="da-hbar-row"><div class="da-hbar-label"><span>' + daEsc(x.label) + '</span><b>' + x.value + (unit || '') + '</b></div>'
+      + '<div class="da-hbar-track"><div class="da-hbar" style="width:' + pct + '%"></div></div></div>';
+  }).join('') + '</div>';
+}
+
+// Q5 の結果（1日を1つに決めたもの）の色
+const DA_OUTCOMES = [
+  { k: 'good',  label: 'うまくできた',       short: 'うまく',   cls: 'o-good' },
+  { k: 'some',  label: '少しうまくできた',   short: '少し',     cls: 'o-some' },
+  { k: 'bad',   label: 'うまくできなかった', short: 'できず',   cls: 'o-bad' },
+  { k: 'other', label: 'それ以外',           short: 'それ以外', cls: 'o-other' }
+];
+function daOutcomeCls(k) { const o = DA_OUTCOMES.find(function(x) { return x.k === k; }); return o ? o.cls : ''; }
+
+// 今のテーマ：この期間に剣道日記のQ4でいちばん多く選んだ項目（同じ日数なら最近選んだ方）
+function daGoal(d) {
+  if (!d.focus || !d.focus.length) return '';
+  return '<div class="da-goal"><div class="da-goal-k">🎯 今のテーマ</div><div class="da-goal-t">' + daEsc(daLabel(d.focus[0].label)) + '</div>'
+    + '<div class="da-goal-s">この期間にQ4でいちばん多く選んだ項目（' + d.focus[0].count + '日）</div></div>';
+}
+
+// ② 今のテーマの進み具合：そのテーマを選んだ日だけを古い順に、Q5の結果ごとの段に点で並べる
+//   段（上から）：うまくできた／少しうまくできた／うまくできなかった／それ以外。色ではなく「高さ」で結果を表す
+const DA_LANES = [
+  { k: 'good',  label: 'うまく' },
+  { k: 'some',  label: '少し' },
+  { k: 'bad',   label: 'できず' },
+  { k: 'other', label: 'その他' }
+];
+let daSeqData = null;
+function daFocus(d) {
+  if (!d.focus || !d.focus.length) return '';
+  const f = d.focus[0];
+  const seq = f.seq || [], n = seq.length;
+  if (!n) return '';
+  daSeqData = seq;
+  const W = 300, L = 54, R = 10, T = 12, LANE = 26, B = 8;
+  const H = T + LANE * 3 + 18 + B;               // 3段＋「その他」段（少し低め）
+  const laneY = { good: T, some: T + LANE, bad: T + LANE * 2, other: T + LANE * 3 + 4 };
+  const xs = function(i) { return n === 1 ? (L + (W - L - R) / 2) : L + i * (W - L - R) / (n - 1); };
+  let svg = '<svg class="da-seq-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + daEsc(daLabel(f.label)) + 'を選んだ日のQ5の結果">';
+  DA_LANES.forEach(function(ln) {
+    const y = laneY[ln.k];
+    svg += '<line class="s-lane' + (ln.k === 'other' ? ' s-lane-o' : '') + '" x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '"/>'
+         + '<text class="s-lab' + (ln.k === 'other' ? ' s-lab-o' : '') + '" x="' + (L - 8) + '" y="' + (y + 4) + '" text-anchor="end">' + ln.label + '</text>';
+  });
+  // 結果のある日（うまく／少し／できず）を順につなぐ線（その他の日はつながない）
+  const pts = [];
+  seq.forEach(function(c, i) { if (c.c !== 'other') pts.push(xs(i).toFixed(1) + ',' + laneY[c.c]); });
+  if (pts.length > 1) svg += '<polyline class="s-path" fill="none" points="' + pts.join(' ') + '"/>';
+  const r = n <= 15 ? 5.5 : n <= 24 ? 4.5 : 3.5;
+  seq.forEach(function(c, i) {
+    svg += '<circle class="s-dot' + (c.m ? ' s-multi' : '') + (c.c === 'other' ? ' s-other' : '') + '" cx="' + xs(i).toFixed(1) + '" cy="' + laneY[c.c] + '" r="' + (c.c === 'other' ? r - 1 : r) + '"/>';
+  });
+  svg += '<line id="da-seq-cur" class="w-cur" x1="0" x2="0" y1="' + (T - 6) + '" y2="' + (laneY.other + 6) + '" style="display:none"/>';
+  const bw = n === 1 ? (W - L - R) : (W - L - R) / (n - 1);
+  seq.forEach(function(c, i) {
+    svg += '<rect class="w-hit" x="' + (xs(i) - bw / 2).toFixed(1) + '" y="0" width="' + bw.toFixed(1) + '" height="' + H + '" onclick="daSeqShow(' + i + ')"/>';
+  });
+  svg += '</svg>';
+
+  let h = '<div class="da-sec"><div class="da-sec-title">② 今のテーマ</div>'
+    + '<div class="da-theme"><span class="da-theme-name">' + daEsc(daLabel(f.label)) + '</span>'
+    + '<span class="da-theme-sub">この範囲でいちばん多く選んだ項目・' + f.count + '回' + (f.run >= 2 ? '・最新まで' + f.run + '回続けて選択' : '') + '</span></div>'
+    + '<div class="da-box"><div class="da-box-title">選んだ日のQ5の結果' + (f.seqTotal > n ? '（直近' + n + '回）' : '') + '</div>' + svg
+    + '<div class="da-tl-axis" style="padding-left:' + (L / W * 100).toFixed(1) + '%"><span>' + daEsc(seq[0].d) + '</span>' + (n > 1 ? '<span>' + daEsc(seq[n - 1].d) + '</span>' : '') + '</div>'
+    + '<div class="da-wave-info" id="da-seq-info">点を押すと、その日の結果が出ます</div>'
+    + '<div class="da-key"><span><i class="k-dot"></i>このテーマだけを選んだ日</span><span><i class="k-dot k-multi"></i>ほかのテーマも選んだ日</span></div></div>';
+
+  // 前半・後半の比較（選んだ日が6回以上のとき）：「うまくできた」の回数を大きく出す
+  if (f.halves) {
+    const a = f.halves.first, b = f.halves.second;
+    h += '<div class="da-box-title" style="margin-top:10px;">「うまくできた」の回数（前半→後半）</div><div class="da-cmp">'
+      + '<div class="da-cmp-cell"><div class="da-cmp-k">前半 ' + a.n + '回中</div><div class="da-cmp-v">' + a.good + '<small>回</small></div><div class="da-cmp-s">' + daEsc(a.from) + '〜' + daEsc(a.to) + '</div></div>'
+      + '<div class="da-cmp-arrow">→</div>'
+      + '<div class="da-cmp-cell"><div class="da-cmp-k">後半 ' + b.n + '回中</div><div class="da-cmp-v">' + b.good + '<small>回</small></div><div class="da-cmp-s">' + daEsc(b.from) + '〜' + daEsc(b.to) + '</div></div>'
+      + '</div><div class="da-cmp-cap">少しうまくできた ' + a.some + '回→' + b.some + '回<br>うまくできなかった ' + a.bad + '回→' + b.bad + '回</div>';
+  } else {
+    h += '<div class="da-note">選んだ日が6回以上になると、前半と後半を比べます</div>';
+  }
+  const rest = d.focus.slice(1).concat(d.others || []);
+  if (rest.length) {
+    h += '<div class="da-note" style="margin-top:6px;">ほかに意識したこと：' + rest.map(function(o) { return daEsc(daLabel(o.label)) + ' ' + o.count + '回'; }).join('・') + '</div>';
+  }
+  return h + '</div>';
+}
+function daSeqShow(i) {
+  const c = daSeqData && daSeqData[i];
+  const info = document.getElementById('da-seq-info');
+  if (!c || !info) return;
+  const o = DA_OUTCOMES.find(function(x) { return x.k === c.c; });
+  info.textContent = c.d + '　' + (o ? o.label : '') + (c.m ? '（ほかのテーマも選んだ日）' : '');
+  const svg = info.parentNode.querySelector('svg');
+  const cur = document.getElementById('da-seq-cur');
+  const hit = svg ? svg.querySelectorAll('.w-hit')[i] : null;
+  if (cur && hit) {
+    const cx = parseFloat(hit.getAttribute('x')) + parseFloat(hit.getAttribute('width')) / 2;
+    cur.setAttribute('x1', cx); cur.setAttribute('x2', cx); cur.style.display = '';
+  }
+}
+
+// ① 調子の波：記録した日ごとの充実度・コンディション・負荷（1〜5）。記録した日だけを詰めて並べる
+let daWaveData = null;
+function daWave(d) {
+  const w = d.wave;
+  if (!w || !w.days || !w.days.length) return '';
+  daWaveData = w.days;
+  const days = w.days, n = days.length;
+  const W = 300, H = 156, L = 20, R = 8, T = 10, B = 30;
+  const xs = function(i) { return n === 1 ? (L + (W - L - R) / 2) : L + i * (W - L - R) / (n - 1); };
+  const ys = function(v) { return T + (5 - v) * (H - T - B) / 4; };
+  const series = [ { k: 'q2', cls: 'w-q2' }, { k: 'q1', cls: 'w-q1' }, { k: 'q3', cls: 'w-q3' } ]; // 充実度を最前面に
+  const r = n <= 31 ? 3.2 : 2;
+  let svg = '<svg class="da-wave" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="日ごとの充実度・コンディション・負荷">';
+  [1, 2, 3, 4, 5].forEach(function(v) {
+    svg += '<line class="w-grid' + (v === 3 ? ' w-mid' : '') + '" x1="' + L + '" x2="' + (W - R) + '" y1="' + ys(v) + '" y2="' + ys(v) + '"/>'
+         + '<text class="w-ax" x="' + (L - 6) + '" y="' + (ys(v) + 3.5) + '" text-anchor="end">' + v + '</text>';
+  });
+  series.forEach(function(s) {
+    const pts = [];
+    days.forEach(function(x, i) { if (x[s.k]) pts.push([xs(i), ys(x[s.k])]); });
+    if (pts.length > 1) svg += '<polyline class="' + s.cls + '" fill="none" points="' + pts.map(function(p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') + '"/>';
+    pts.forEach(function(p) { svg += '<circle class="' + s.cls + '-pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + r + '"/>'; });
+  });
+  svg += '<line id="da-wave-cur" class="w-cur" x1="0" x2="0" y1="' + T + '" y2="' + (H - B) + '" style="display:none"/>';
+  // 日付の目盛り（点の真下に置く）：最初・真ん中・最後
+  const ticks = n === 1 ? [0] : (n >= 5 ? [0, Math.floor((n - 1) / 2), n - 1] : [0, n - 1]);
+  ticks.forEach(function(i, j) {
+    const anchor = n === 1 ? 'middle' : (j === 0 ? 'start' : (i === n - 1 ? 'end' : 'middle'));
+    svg += '<line class="w-tick" x1="' + xs(i).toFixed(1) + '" x2="' + xs(i).toFixed(1) + '" y1="' + (H - B + 2) + '" y2="' + (H - B + 6) + '"/>'
+         + '<text class="w-date" x="' + (anchor === 'start' ? xs(i) - 4 : anchor === 'end' ? xs(i) + 4 : xs(i)).toFixed(1) + '" y="' + (H - B + 18) + '" text-anchor="' + anchor + '">' + daEsc(days[i].d) + '</text>';
+  });
+  const bw = n === 1 ? (W - L - R) : (W - L - R) / (n - 1);
+  days.forEach(function(x, i) {
+    svg += '<rect class="w-hit" x="' + (xs(i) - bw / 2).toFixed(1) + '" y="0" width="' + bw.toFixed(1) + '" height="' + H + '" onclick="daWaveShow(' + i + ')"/>';
+  });
+  svg += '</svg>';
+  const mid = Math.floor((n - 1) / 2);
+  const recN = days.filter(function(x) { return x.q1 || x.q2 || x.q3; }).length;
+  return '<div class="da-sec"><div class="da-sec-title">① 調子の波</div>'
+    + '<div class="da-box">'
+    + '<div class="da-key da-key-btns" style="margin:0 0 4px;">'
+    + '<button type="button" aria-pressed="true" onclick="daWaveToggle(this,\'q3\')"><i class="k-line k-q3"></i>充実度</button>'
+    + '<button type="button" aria-pressed="true" onclick="daWaveToggle(this,\'q1\')"><i class="k-line k-q1"></i>コンディション</button>'
+    + '<button type="button" aria-pressed="true" onclick="daWaveToggle(this,\'q2\')"><i class="k-line k-q2"></i>負荷（5＝きつい）</button></div>'
+    + '<div class="da-note" style="margin:0 0 2px;">名前を押すと、その線を消したり出したりできます</div>'
+    + svg
+    + '<div class="da-wave-info" id="da-wave-info">グラフを押すと、その日の値が出ます</div></div>'
+    + (recN === 0 ? '<div class="da-row" style="color:#b45309;">この範囲の日記は、Q1〜Q3（コンディション・負荷・充実度）が未記入のため、点を表示できません</div>' : '')
+    + (recN === 1 ? '<div class="da-note">Q1〜Q3が記入された記録が1回分なので、点だけ表示しています（2回分以上で線になります）</div>' : '')
+    + (w.capped ? '<div class="da-note">直近90日分を表示しています</div>' : '') + '</div>';
+}
+// 線の表示・非表示（見たい線だけに絞れる）
+function daWaveToggle(btn, k) {
+  const svg = btn.closest('.da-box').querySelector('svg.da-wave');
+  if (!svg) return;
+  const on = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  svg.classList.toggle('hide-' + k, !on);
+}
+function daWaveShow(i) {
+  const x = daWaveData && daWaveData[i];
+  const info = document.getElementById('da-wave-info');
+  if (!x || !info) return;
+  info.textContent = (x.q3 || x.q1 || x.q2)
+    ? x.d + '　充実度 ' + (x.q3 || '—') + '　コンディション ' + (x.q1 || '—') + '　負荷 ' + (x.q2 || '—')
+    : x.d + '　記録なし';
+  const svg = info.parentNode.querySelector('svg');
+  const cur = document.getElementById('da-wave-cur');
+  const hit = svg ? svg.querySelectorAll('.w-hit')[i] : null;
+  if (cur && hit) {
+    const cx = parseFloat(hit.getAttribute('x')) + parseFloat(hit.getAttribute('width')) / 2;
+    cur.setAttribute('x1', cx); cur.setAttribute('x2', cx); cur.style.display = '';
+  }
+}
+
+
+// 次の稽古へ：答えは出さず、本人に問いを1つ返す（決めたことは次の剣道日記のQ4で選ぶ）
+function daNext(d) {
+  if (!d.focus || !d.focus.length) return '';
+  return '<div class="da-next"><div class="da-next-k">🧭 次の稽古へ</div>'
+    + '<div class="da-next-q">今のテーマ「' + daEsc(daLabel(d.focus[0].label)) + '」は、次の稽古でも続ける？　それとも変える？</div>'
+    + '<div class="da-next-s">決めたことを意識して稽古し、次の剣道日記のQ4で選ぼう</div></div>';
+}
+
+function daRender(d) {
+  let h = '';
+  const lab = (DA_PERIODS.find(function(p) { return p.d === d.periodDays; }) || {}).label || '';
+  if (!d.days) {
+    return '<div class="da-empty"><div>まだ日記の記録がありません。</div><div class="da-empty-s">提出直後は、反映まで少しかかることがあります。</div></div>' + daPeers(d);
+  }
+  const range = (d.periodDays && d.days < d.periodDays) ? '記録 ' + d.days + '回分（全部）' : (lab === '全部' ? '全部（' + d.days + '回分）' : lab + '分');
+  h += '<div class="da-meta">' + range + '：' + daEsc(d.periodFrom) + (d.days > 1 ? '〜' + daEsc(d.periodTo) : '') + '</div>';
+  // GAS が古い版（v11 より前）のときは、グラフ用のデータが返ってこない
+  if (d.wave === undefined) {
+    return h + '<div class="da-row" style="color:#b45309;">サーバー側（GAS）が古い版のため、グラフを表示できません。GAS を最新版に置き換え、「新バージョン」でデプロイしてください。</div>' + daPeers(d);
+  }
+  if (d.days < d.minDays) {
+    return h + daWave(d) + '<div class="da-meta">記録が' + d.minDays + '回分たまると分析を表示します（あと' + (d.minDays - d.days) + '回）。</div>' + daPeers(d);
+  }
+  // 並び：① 調子の波 → ② 今のテーマ（進み具合） → ③ 仲間からの反応 → 次の稽古へ
+  return h + daWave(d) + daFocus(d) + daPeers(d) + daNext(d)
+    + '<div class="da-note" style="margin-top:10px;">※同じ日に複数回出した日は項目ごとに最新の記入、Q5を複数選んだ日は「うまく→少し→できず」の順で1つに数えています</div>';
 }
 
 // 名前以外をクリア
