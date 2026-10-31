@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>剣道日記 保護者ページ</title>
+<style>
+  :root{
+    --ink:#0d1117; --ink-soft:#3d4451; --ink-muted:#6b7280;
+    --bg:#f9f7f4; --bg-warm:#f2efe9; --surface:#ffffff; --surface-2:#faf9f7;
+    --border:#e8e2d9; --border-soft:#f0ebe3;
+    --primary:#1a3a6b; --primary-lt:#2a5298; --gold:#b8960c; --gold-lt:#d4ad1a; --gold-pale:#fdf6dc;
+    --teal:#1f9e89; --red:#c0392b;
+    --shadow-sm:0 1px 4px rgba(13,17,23,.06),0 1px 2px rgba(13,17,23,.04);
+    --shadow-md:0 4px 16px rgba(13,17,23,.08),0 2px 6px rgba(13,17,23,.05);
+    --radius-sm:8px; --radius-md:14px; --radius-lg:20px; --radius-xl:28px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--ink);padding:22px 14px 48px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  input,textarea{font-family:inherit}
+  .wrap{max-width:540px;margin:0 auto}
+
+  .phead{background:var(--surface);border-radius:var(--radius-xl);padding:26px 24px 22px;box-shadow:var(--shadow-md);border:1px solid var(--border-soft);position:relative;overflow:hidden;text-align:center;margin-bottom:14px}
+  .phead::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--gold),var(--primary))}
+  .phead-badge{display:inline-block;font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:700;margin-bottom:10px}
+  .phead-name{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:900;color:var(--ink);letter-spacing:.04em}
+  .phead-name b{color:var(--primary)}
+  .phead-sub{font-size:11px;color:var(--ink-muted);margin-top:6px;letter-spacing:.05em}
+
+  .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:16px 18px;margin-bottom:14px}
+  .card-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .card-h .ic{font-size:16px}
+  .card-h .t{font-size:14px;font-weight:700;color:var(--primary);letter-spacing:.03em}
+  .card-h .p{margin-left:auto;font-size:11px;font-weight:600;color:var(--ink-muted);background:var(--bg-warm);padding:3px 10px;border-radius:999px}
+
+  .wave-box{background:var(--surface-2);border-radius:12px;padding:10px 8px 6px}
+  svg.wave{width:100%;height:auto;display:block}
+  .wave .grid{stroke:rgba(26,58,107,.10);stroke-width:1}
+  .wave .mid{stroke:rgba(26,58,107,.20)}
+  .wave .ax{font-size:10px;fill:var(--ink-muted)}
+  .wave .date{font-size:9.5px;fill:var(--ink-muted)}
+  .wave .q3{stroke:var(--primary-lt);stroke-width:2.5;fill:none;stroke-linejoin:round;stroke-linecap:round}
+  .wave .q1{stroke:var(--teal);stroke-width:2;fill:none;stroke-dasharray:4 3;stroke-linejoin:round;stroke-linecap:round}
+  .wave .q3pt{fill:var(--primary-lt);stroke:#fff;stroke-width:1}
+  .wave .q1pt{fill:var(--teal);stroke:#fff;stroke-width:1}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin-top:8px;padding-left:4px}
+  .legend i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  .legend .l-q3{background:var(--primary-lt)}
+  .legend .l-q1{background:repeating-linear-gradient(90deg,var(--teal) 0 4px,transparent 4px 7px)}
+
+  .theme{display:flex;flex-direction:column;background:var(--surface-2);border-left:4px solid var(--primary);border-radius:0 12px 12px 0;padding:12px 14px}
+  .theme-name{font-size:19px;font-weight:800;color:var(--primary);line-height:1.35}
+  .theme-sub{font-size:11.5px;color:var(--ink-muted);margin-top:3px}
+
+  .hk{background:var(--surface-2);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .hk:last-child{margin-bottom:0}
+  .hk-date{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .hk-text{font-size:13.5px;color:var(--ink-soft);line-height:1.65;white-space:pre-wrap;word-break:break-word}
+
+  .empty{font-size:12.5px;color:var(--ink-muted);background:var(--surface-2);border-radius:10px;padding:14px;text-align:center}
+
+  .nick-row{margin-bottom:14px}
+  .nick-label{font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.04em;margin-bottom:6px;display:block}
+  .nick-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink)}
+  .nick-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,58,107,.08);outline:none}
+  .nick-hint{font-size:10.5px;color:var(--ink-muted);margin-top:5px}
+
+  .cheer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+  .cheer-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 4px;border:1.5px solid var(--border);border-radius:var(--radius-md);background:var(--surface);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;min-height:44px}
+  .cheer-btn:active{transform:scale(.96)}
+  .cheer-emoji{font-size:26px;line-height:1}
+  .cheer-label{font-size:12px;font-weight:700;color:var(--ink-soft)}
+  .cheer-btn.on{border-color:var(--primary);background:rgba(26,58,107,.06);box-shadow:0 2px 10px rgba(26,58,107,.15)}
+  .cheer-btn.on .cheer-label{color:var(--primary)}
+  .cheer-sent{font-size:11.5px;color:var(--teal);font-weight:700;text-align:center;margin-top:10px;min-height:1.3em;transition:opacity .2s}
+
+  .cm-divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
+  .cm-divider .ln{flex:1;height:1px;background:var(--border)}
+  .cm-divider .tx{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);font-weight:700}
+  .cm-row{display:flex;gap:8px}
+  .cm-input{flex:1;min-width:0;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--ink)}
+  .cm-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,58,107,.08);outline:none}
+  .cm-send{flex-shrink:0;padding:0 18px;border:none;border-radius:var(--radius-sm);background:var(--primary);color:#fff;font-size:14px;font-weight:700;cursor:pointer;min-height:44px}
+  .cm-send:disabled{opacity:.5}
+  .cm-count{font-size:10.5px;color:var(--ink-muted);text-align:right;margin-top:4px}
+  .cm-sent{font-size:11.5px;color:var(--teal);font-weight:700;text-align:center;margin-top:8px;min-height:1.3em}
+
+  .foot{text-align:center;font-size:10.5px;color:var(--ink-muted);line-height:1.7;margin-top:22px}
+
+  /* 状態（読み込み／エラー） */
+  .state{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-soft);box-shadow:var(--shadow-sm);padding:40px 24px;text-align:center}
+  .state-ic{font-size:34px;margin-bottom:12px}
+  .state-t{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px}
+  .state-s{font-size:12.5px;color:var(--ink-muted);line-height:1.8}
+  .spin{width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;margin:0 auto 14px;animation:sp 0.8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- 読み込み中 -->
+    <div id="view-loading" class="state">
+      <div class="spin"></div>
+      <div class="state-t">読み込んでいます…</div>
+    </div>
+
+    <!-- エラー（コードなし／不正） -->
+    <div id="view-error" class="state hidden">
+      <div class="state-ic">🔑</div>
+      <div class="state-t" id="err-title">ページを開けませんでした</div>
+      <div class="state-s" id="err-msg">配布された<b>QRコード</b>から開いてください。</div>
+    </div>
+
+    <!-- 本体 -->
+    <div id="view-main" class="hidden">
+
+      <div class="phead">
+        <div class="phead-badge">剣道日記  保護者ページ</div>
+        <div class="phead-name"><b id="child-name">—</b> さんの最近のようす</div>
+        <div class="phead-sub">直近1か月の記録から</div>
+      </div>
+
+      <!-- 調子の波 -->
+      <div class="card">
+        <div class="card-h"><span class="ic">📈</span><span class="t">調子の波</span><span class="p">直近1か月</span></div>
+        <div id="wave-wrap">
+          <div class="wave-box"><svg class="wave" id="wave" viewBox="0 0 320 128" preserveAspectRatio="xMidYMid meet" aria-label="調子の波"></svg></div>
+          <div class="legend">
+            <span><i class="l-q3"></i>稽古の充実度</span>
+            <span><i class="l-q1"></i>コンディション</span>
+          </div>
+        </div>
+        <div id="wave-empty" class="empty hidden">まだ記録がありません。</div>
+      </div>
+
+      <!-- 今のテーマ -->
+      <div class="card">
+        <div class="card-h"><span class="ic">🎯</span><span class="t">今のテーマ</span></div>
+        <div id="theme-wrap" class="theme">
+          <div class="theme-name" id="theme-name">—</div>
+          <div class="theme-sub" id="theme-sub"></div>
+        </div>
+        <div id="theme-empty" class="empty hidden">まだテーマが出ていません。</div>
+      </div>
+
+      <!-- 最近のひとこと -->
+      <div class="card">
+        <div class="card-h"><span class="ic">💬</span><span class="t">最近のひとこと</span><span class="p">直近5件</span></div>
+        <div id="hk-list"></div>
+        <div id="hk-empty" class="empty hidden">まだひとことはありません。</div>
+      </div>
+
+      <!-- 応援を送る -->
+      <div class="card">
+        <div class="card-h"><span class="ic">💛</span><span class="t">応援を送る</span></div>
+
+        <div class="nick-row">
+          <label class="nick-label" for="nick">お子さんへの表示名</label>
+          <input id="nick" class="nick-input" placeholder="例：お母さん / お父さん" maxlength="20">
+          <div class="nick-hint">最初に一度だけ。お子さんの画面に「〇〇から」と表示されます。</div>
+        </div>
+
+        <div class="cheer-grid">
+          <button class="cheer-btn" data-type="nice"   type="button"><span class="cheer-emoji">👍</span><span class="cheer-label">いいね</span></button>
+          <button class="cheer-btn" data-type="ganbare" type="button"><span class="cheer-emoji">💪</span><span class="cheer-label">がんばれ</span></button>
+          <button class="cheer-btn" data-type="sugoi"  type="button"><span class="cheer-emoji">👏</span><span class="cheer-label">すごい</span></button>
+        </div>
+        <div class="cheer-sent" id="cheer-sent"></div>
+
+        <div class="cm-divider"><span class="ln"></span><span class="tx">ひとことコメント</span><span class="ln"></span></div>
+        <div class="cm-row">
+          <input id="cm" class="cm-input" placeholder="お子さんへ（30字まで）" maxlength="30">
+          <button id="cm-send" class="cm-send" type="button">送る</button>
+        </div>
+        <div class="cm-count"><span id="cm-count">0</span> / 30</div>
+        <div class="cm-sent" id="cm-sent"></div>
+      </div>
+
+      <div class="foot">お子さんの日記は、ご家庭でそっと見守るためのものです。<br>応援とコメントは、お子さん本人にだけ届きます。</div>
+
+    </div>
+  </div>
+
+<script>
+// ====== 設定（北高：既存デプロイURL。再デプロイしてもURLは変わらない）======
+const GAS_URL     = 'https://script.google.com/macros/s/AKfycbzAEjob4wNJKirt1L3HG97ujk7oLEC8dCLm3zBRXana_ci-0TbiUwTunLckWTwTMd-2/exec';
+const WRITE_TOKEN = 'marc2025SagaKendo';
+const LS_CODE = 'marc_oya_code';
+const LS_NICK = 'marc_oya_nick';
+
+function $(id){ return document.getElementById(id); }
+function show(id){ $(id).classList.remove('hidden'); }
+function hide(id){ $(id).classList.add('hidden'); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function lsGet(k){ try{return localStorage.getItem(k)||'';}catch(e){return '';} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+
+// ====== コードの取得（URL ?c= 優先。無ければ保存済み）======
+function getCode(){
+  const u = new URLSearchParams(location.search);
+  const fromUrl = (u.get('c') || u.get('code') || '').trim();
+  if (fromUrl){ lsSet(LS_CODE, fromUrl); return fromUrl; }
+  return lsGet(LS_CODE);
+}
+const CODE = getCode();
+
+// ====== JSONP（GASをクロスオリジンで確実に読む。fetchのCORS問題を回避）======
+function jsonp(url){
+  return new Promise(function(resolve, reject){
+    var cb = '__oya_cb_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+    var s = document.createElement('script');
+    var timer = setTimeout(function(){ cleanup(); reject(new Error('timeout')); }, 15000);
+    function cleanup(){ clearTimeout(timer); try{ delete window[cb]; }catch(e){ window[cb]=undefined; } if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb] = function(data){ cleanup(); resolve(data); };
+    s.onerror = function(){ cleanup(); reject(new Error('script error')); };
+    s.src = url + (url.indexOf('?')>=0?'&':'?') + 'callback=' + cb;
+    document.body.appendChild(s);
+  });
+}
+
+// ====== 波グラフ描画（コンディション=q1 / 充実度=q3）======
+function drawWave(wave){
+  const pts = wave.filter(function(d){ return d && (d.q1!=null || d.q3!=null); });
+  if (!pts.length){ hide('wave-wrap'); show('wave-empty'); return; }
+  const dates = pts.map(function(d){ return d.date||''; });
+  const q1 = pts.map(function(d){ return d.q1; });
+  const q3 = pts.map(function(d){ return d.q3; });
+  const W=320,H=128,padL=22,padR=10,padT=12,padB=22;
+  const innerW=W-padL-padR, innerH=H-padT-padB, n=pts.length;
+  function x(i){ return padL + (n<=1?innerW/2:innerW*i/(n-1)); }
+  function y(v){ return padT + innerH*(5-v)/4; }
+  let el='';
+  [1,3,5].forEach(function(v){
+    const yy=y(v).toFixed(1);
+    el+='<line class="grid'+(v===3?' mid':'')+'" x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'"/>';
+    el+='<text class="ax" x="'+(padL-5)+'" y="'+(+yy+3)+'" text-anchor="end">'+v+'</text>';
+  });
+  function line(arr,cls){
+    let d='',started=false;
+    arr.forEach(function(v,i){ if(v==null)return; d+=(started?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)+' '; started=true; });
+    return d?'<path class="'+cls+'" d="'+d.trim()+'"/>':'';
+  }
+  function dots(arr,cls){ return arr.map(function(v,i){ return v==null?'':'<circle class="'+cls+'" cx="'+x(i).toFixed(1)+'" cy="'+y(v).toFixed(1)+'" r="3"/>'; }).join(''); }
+  el+=line(q1,'q1')+line(q3,'q3')+dots(q1,'q1pt')+dots(q3,'q3pt');
+  dates.forEach(function(dt,i){ if(n>6 && i%2===1 && i!==n-1) return; el+='<text class="date" x="'+x(i).toFixed(1)+'" y="'+(H-7)+'" text-anchor="middle">'+esc(dt)+'</text>'; });
+  $('wave').innerHTML=el;
+  show('wave-wrap'); hide('wave-empty');
+}
+
+// ====== 本体の表示 ======
+function render(d){
+  $('child-name').textContent = d.display || d.name || 'お子さん';
+  drawWave(d.wave || []);
+
+  if (d.theme && d.theme.name){
+    $('theme-name').textContent = d.theme.name;
+    $('theme-sub').textContent = d.theme.count>1 ? ('直近1か月でいちばん多く意識していたこと（'+d.theme.count+'回）') : '直近に意識していたこと';
+    show('theme-wrap'); hide('theme-empty');
+  } else { hide('theme-wrap'); show('theme-empty'); }
+
+  const hk = d.hitokoto || [];
+  if (hk.length){
+    $('hk-list').innerHTML = hk.map(function(h){
+      return '<div class="hk"><div class="hk-date">'+esc(h.date)+'</div><div class="hk-text">'+esc(h.text)+'</div></div>';
+    }).join('');
+    hide('hk-empty');
+  } else { $('hk-list').innerHTML=''; show('hk-empty'); }
+
+  hide('view-loading'); hide('view-error'); show('view-main');
+}
+
+function showError(title,msg){
+  if(title) $('err-title').textContent=title;
+  if(msg)   $('err-msg').innerHTML=msg;
+  hide('view-loading'); hide('view-main'); show('view-error');
+}
+
+// ====== 読み込み ======
+function load(){
+  if (!CODE){ showError('ページを開けませんでした','配布された<b>QRコード</b>から開いてください。'); return; }
+  jsonp(GAS_URL + '?action=oyaView&code=' + encodeURIComponent(CODE))
+    .then(function(j){
+      if (!j || j.status!=='ok'){ showError('コードを確認できません', (j&&j.message?esc(j.message):'配布されたQRコードをご確認ください。')); return; }
+      render(j);
+    })
+    .catch(function(){ showError('通信に失敗しました','電波のよい場所で、QRをもう一度読み込んでください。'); });
+}
+
+// ====== 応援・コメント送信 ======
+function nick(){ return ($('nick').value||'').trim(); }
+function saveNick(){ lsSet(LS_NICK, nick()); }
+
+function postNoCors(payload){
+  return fetch(GAS_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(Object.assign({ _token:WRITE_TOKEN, code:CODE, nickname:nick() }, payload))
+  });
+}
+
+function sendCheer(type, btn){
+  saveNick();
+  postNoCors({ action:'parentCheer', type:type });
+  document.querySelectorAll('.cheer-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  const label = { nice:'👍 いいね', ganbare:'💪 がんばれ', sugoi:'👏 すごい' }[type] || '応援';
+  const el=$('cheer-sent'); el.textContent = label + ' を送りました';
+  el.style.opacity='1'; setTimeout(function(){ el.style.opacity='.0'; }, 3000);
+}
+
+function sendComment(){
+  const t=($('cm').value||'').trim();
+  if(!t){ return; }
+  if(t.length>30){ $('cm-sent').textContent='30字以内で入力してください'; return; }
+  saveNick();
+  postNoCors({ action:'parentComment', text:t });
+  $('cm').value=''; $('cm-count').textContent='0';
+  $('cm-sent').textContent='コメントを送りました';
+  setTimeout(function(){ $('cm-sent').textContent=''; }, 3500);
+}
+
+// ====== 初期化 ======
+document.addEventListener('DOMContentLoaded', function(){
+  $('nick').value = lsGet(LS_NICK);
+  $('nick').addEventListener('change', saveNick);
+  document.querySelectorAll('.cheer-btn').forEach(function(b){
+    b.addEventListener('click', function(){ sendCheer(b.dataset.type, b); });
+  });
+  $('cm').addEventListener('input', function(){ $('cm-count').textContent = ($('cm').value||'').length; });
+  $('cm-send').addEventListener('click', sendComment);
+  load();
+});
+</script>
+</body>
+</html>
