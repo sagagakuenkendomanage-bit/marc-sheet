@@ -624,6 +624,8 @@ body.kd-sheet-open { overflow: hidden; }
   .da-sumi-top { gap: 12px; }
   .da-face { width: 56px; height: 56px; }
 }
+.t-sync { position: fixed; top: calc(10px + env(safe-area-inset-top)); left: 50%; transform: translate(-50%, -8px); z-index: 960; padding: 5px 12px; border-radius: var(--r-full); background: var(--label); color: var(--bg); font-size: var(--t-xs); font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.t-sync.on { opacity: .85; transform: translate(-50%, 0); }
 </style>
 <style id="kd-teacher">
 /* 先生用 */
@@ -1396,6 +1398,49 @@ function tSensei() {
 }
 function needSensei() { showToast('⚠ 先に先生のお名前を入れてください'); tEditSensei(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
+// ----- 開いたときの読み込み（前回の内容をすぐ出し、裏で最新に入れ替える） -----
+const T_CACHE = 'marc_t_home_v1';
+function tCacheGet() { try { return JSON.parse(localStorage.getItem(T_CACHE) || 'null'); } catch (e) { return null; } }
+function tCacheSet(o) { try { localStorage.setItem(T_CACHE, JSON.stringify(o)); } catch (e) {} }
+function tSync(on, text) {
+  const el = document.getElementById('t-sync'); if (!el) return;
+  el.textContent = text || '最新に更新中…'; el.classList.toggle('on', !!on);
+}
+function tApplyNews(j) {
+  hkDisplayNames = j.displayNames || {}; icons = j.icons || {};
+  hkItems = (j.hitokoto || []).slice().sort(function(a, b) {
+    if (tDayKey(a) !== tDayKey(b)) return tDayKey(a) < tDayKey(b) ? 1 : -1;
+    return (+String(b.id).split('|')[1] || 0) - (+String(a.id).split('|')[1] || 0);
+  });
+  const list = document.getElementById('hk-list');
+  list.removeAttribute('aria-busy'); tDraw(); tDrawAlerts();
+  if (!document.getElementById('t-pane-detail').classList.contains('hidden') && tName) document.getElementById('t-d-name').innerHTML = avatarHtml(tName, 'md') + '<span>' + escH(hkDn(tName)) + '</span>';
+}
+function tApplyAlerts(list) { tAlerts = list || []; tAlertsLoaded = true; tDrawAlerts(); }
+function tLoadHome() {
+  const c = tCacheGet();
+  const shown = !!(c && c.hitokoto && c.alerts);
+  if (shown) { tApplyAlerts(c.alerts); tApplyNews(c); tSync(true); }
+  else document.getElementById('hk-list').innerHTML = HK_SKELETON;
+  getJ({ action: 'teacherHome' }).then(function(j) {
+    if (!j || j.status !== 'ok' || !j.alerts || !j.hitokoto) {
+      // まだ新しいGASに入れ替えていない／片方だけ読めなかったとき：今までどおり別々に読む
+      tSync(false); tLoadAlerts(); tLoadFeed(); return;
+    }
+    tApplyAlerts(j.alerts); tApplyNews(j); tSync(false);
+    tCacheSet({ alerts: j.alerts, hitokoto: j.hitokoto, displayNames: j.displayNames, icons: j.icons, t: Date.now() });
+  }).catch(function(e) {
+    tSync(false);
+    // GASがまだ前の版（まとめ読みがない）と返したときは、今までどおり別々に読む
+    if (e && /不正なリクエスト/.test(e.message || '')) { tLoadAlerts(); tLoadFeed(); return; }
+    if (shown) { showToast('⚠ 最新の内容を読み込めませんでした（前回の内容を表示しています）'); return; }
+    // 通信できなかった／時間切れ：すぐに「もう一度読み込む」を出す（別々に読み直して、さらに待たせることはしない）
+    const err = function(what) { return '<div class="kd-err">' + what + 'を読み込めませんでした。<br><button type="button" onclick="tLoadHome()">もう一度読み込む</button></div>'; };
+    document.getElementById('t-alerts').innerHTML = err('気になる部員');
+    document.getElementById('hk-list').innerHTML = err('部員の一言');
+  });
+}
+
 // ----- 気になる部員 -----
 let tAlerts = [];
 function tLoadAlerts() {
@@ -1424,12 +1469,7 @@ function tLoadFeed() {
   const list = document.getElementById('hk-list');
   if (!hkItems.length) list.innerHTML = HK_SKELETON;
   getJ({ action: 'teacherNews' }).then(function(j) {
-    hkDisplayNames = j.displayNames || {}; icons = j.icons || {};
-    hkItems = (j.hitokoto || []).slice().sort(function(a, b) {
-      if (tDayKey(a) !== tDayKey(b)) return tDayKey(a) < tDayKey(b) ? 1 : -1;
-      return (+String(b.id).split('|')[1] || 0) - (+String(a.id).split('|')[1] || 0);
-    });
-    list.removeAttribute('aria-busy'); tDraw(); tDrawAlerts(); if (!document.getElementById('t-pane-detail').classList.contains('hidden') && tName) document.getElementById('t-d-name').innerHTML = avatarHtml(tName, 'md') + '<span>' + escH(hkDn(tName)) + '</span>';
+    tApplyNews(j);
   }).catch(function() { list.innerHTML = '<div class="kd-err">部員の一言を読み込めませんでした。<br><button type="button" onclick="tLoadFeed()">もう一度読み込む</button></div>'; });
 }
 function tDraw() {
@@ -1522,8 +1562,9 @@ function tBack() {
   window.scrollTo(0, tScroll);
 }
 document.addEventListener('DOMContentLoaded', function() {
-  tSensei(); tLoadAlerts(); tLoadFeed();
+  tSensei(); tLoadHome();
 });
 </script>
+<div id="t-sync" class="t-sync" role="status" aria-live="polite"></div>
 </body>
 </html>
